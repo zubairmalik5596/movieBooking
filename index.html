@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CineVerse — Premium Movie Booking</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary: #e50914;
+  --primary-dark: #b0060f;
+  --accent: #f5c518;
+  --dark: #050505;
+  --dark2: #0d0d0d;
+  --dark3: #1a1a2e;
+  --dark4: #16213e;
+  --glass: rgba(255,255,255,0.05);
+  --glass2: rgba(255,255,255,0.08);
+  --glass3: rgba(255,255,255,0.12);
+  --text: #e5e5e5;
+  --text2: #888;
+  --gold: #ffd700;
+  --platinum: #c0c0c0;
+  --box-color: #cd7f32;
+  --neon-red: rgba(229,9,20,0.6);
+  --neon-blue: rgba(102,126,234,0.4);
+  --neon-purple: rgba(118,75,162,0.4);
+  --gradient1: linear-gradient(135deg, #e50914 0%, #ff6b35 100%);
+  --gradient2: linear-gradient(135deg, #0a0a1a 0%, #0f1629 50%, #0a1628 100%);
+  --gradient3: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --gradient4: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  --gradient5: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  --shadow: 0 8px 32px rgba(0,0,0,0.5);
+  --shadow-lg: 0 25px 60px rgba(0,0,0,0.6);
+  --shadow-glow: 0 0 40px rgba(229,9,20,0.3);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--dark);color:var(--text);overflow-x:hidden;min-height:100vh}
+
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--dark)}
+::-webkit-scrollbar-thumb{background:linear-gradient(180deg,var(--primary),#ff6b35);border-radius:3px}
+
+/* ===== LOADER ===== */
+#loader{position:fixed;inset:0;z-index:99999;background:var(--dark);display:flex;align-items:center;justify-content:center;transition:opacity .6s,visibility .6s}
+#loader.hidden{opacity:0;visibility:hidden;pointer-events:none}
+.loader-ring{width:70px;height:70px;position:relative}
+.loader-ring div{position:absolute;width:56px;height:56px;border:3px solid transparent;border-radius:50%;animation:loaderSpin 1.2s cubic-bezier(.5,0,.5,1) infinite}
+.loader-ring div:nth-child(1){border-top-color:var(--primary);animation-delay:-.45s}
+.loader-ring div:nth-child(2){border-right-color:var(--accent);animation-delay:-.3s}
+.loader-ring div:nth-child(3){border-bottom-color:#667eea;animation-delay:-.15s}
+@keyframes loaderSpin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeInUp{from{opacity:0;transform:translateY(50px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideInLeft{from{opacity:0;transform:translateX(-60px)}to{opacity:1;transform:translateX(0)}}
+@keyframes slideInRight{from{opacity:0;transform:translateX(60px)}to{opacity:1;transform:translateX(0)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+@keyframes glow{0%,100%{box-shadow:0 0 20px var(--neon-red)}50%{box-shadow:0 0 50px var(--neon-red),0 0 80px rgba(229,9,20,0.2)}}
+@keyframes rotate{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+@keyframes moveParticle{0%{transform:translateY(0) translateX(0);opacity:0}10%{opacity:1}90%{opacity:1}100%{transform:translateY(-100vh) translateX(20px);opacity:0}}
+@keyframes borderGlow{0%,100%{border-color:rgba(229,9,20,0.3)}50%{border-color:rgba(229,9,20,0.8)}}
+@keyframes textShine{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+@keyframes scaleIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
+
+.animate-fade-up{animation:fadeInUp .8s ease forwards}
+.animate-fade{animation:fadeIn .6s ease forwards}
+.animate-scale{animation:scaleIn .6s ease forwards}
+
+/* ===== PARTICLES BG ===== */
+.particles-bg{position:absolute;inset:0;overflow:hidden;z-index:0}
+.particle{position:absolute;width:3px;height:3px;background:rgba(229,9,20,0.5);border-radius:50%;animation:moveParticle linear infinite}
+
+/* ===== GLASSMORPHISM ===== */
+.glass-card{background:rgba(255,255,255,0.03);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.06);border-radius:20px;transition:all .4s}
+.glass-card:hover{border-color:rgba(229,9,20,0.3);background:rgba(255,255,255,0.06)}
+.glass-card-strong{background:rgba(13,13,13,0.85);backdrop-filter:blur(40px);border:1px solid rgba(255,255,255,0.08);border-radius:20px}
+
+/* ===== NAVBAR ===== */
+.navbar-cinema{background:rgba(5,5,5,0.92)!important;backdrop-filter:blur(30px);border-bottom:1px solid rgba(255,255,255,0.05);padding:.75rem 0;transition:all .4s}
+.navbar-cinema.scrolled{padding:.4rem 0;box-shadow:0 4px 40px rgba(0,0,0,.6);border-bottom-color:rgba(229,9,20,0.15)}
+.navbar-brand{font-family:'Playfair Display',serif!important;font-weight:900!important;font-size:1.8rem!important;background:linear-gradient(135deg,var(--primary),var(--accent),var(--primary));background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:textShine 3s ease infinite;letter-spacing:-1px}
+.nav-link{color:var(--text2)!important;font-weight:500;font-size:.88rem;padding:.5rem 1rem!important;transition:all .3s;position:relative}
+.nav-link:hover,.nav-link.active{color:#fff!important}
+.nav-link::after{content:'';position:absolute;bottom:0;left:50%;width:0;height:2px;background:var(--gradient1);transition:all .3s;transform:translateX(-50%);border-radius:2px}
+.nav-link:hover::after,.nav-link.active::after{width:70%}
+
+/* ===== BUTTONS ===== */
+.btn-cine{background:var(--gradient1);color:#fff;border:none;padding:.7rem 2rem;border-radius:50px;font-weight:600;font-size:.9rem;transition:all .3s;position:relative;overflow:hidden;letter-spacing:.3px}
+.btn-cine:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(229,9,20,0.45);color:#fff}
+.btn-cine::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent,rgba(255,255,255,.25),transparent);transform:translateX(-100%);transition:.6s}
+.btn-cine:hover::before{transform:translateX(100%)}
+.btn-outline-cine{border:2px solid var(--primary);color:var(--primary);padding:.6rem 1.8rem;border-radius:50px;font-weight:600;background:transparent;transition:all .3s}
+.btn-outline-cine:hover{background:var(--primary);color:#fff;transform:translateY(-3px);box-shadow:0 10px 30px rgba(229,9,20,0.35)}
+.btn-gold{background:linear-gradient(135deg,#ffd700,#ff8c00);color:#000;font-weight:700;border-radius:50px;border:none}
+.btn-gold:hover{box-shadow:0 8px 25px rgba(255,215,0,.4);transform:translateY(-2px);color:#000}
+
+/* ===== HERO ===== */
+.hero-section{min-height:100vh;position:relative;display:flex;align-items:center;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:url('https://images.pexels.com/photos/7991486/pexels-photo-7991486.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=1920') center/cover}
+.hero-bg::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(5,5,5,.97) 0%,rgba(5,5,5,.8) 40%,rgba(5,5,5,.5) 100%)}
+.hero-bg::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 70% 50%,rgba(229,9,20,0.08) 0%,transparent 70%)}
+.hero-content{position:relative;z-index:2}
+.hero-badge{display:inline-flex;align-items:center;gap:.5rem;background:rgba(229,9,20,0.1);border:1px solid rgba(229,9,20,0.25);padding:.45rem 1.4rem;border-radius:50px;font-size:.78rem;font-weight:700;color:var(--accent);margin-bottom:1.5rem;letter-spacing:2px;text-transform:uppercase;animation:borderGlow 3s ease infinite}
+.hero-title{font-family:'Playfair Display',serif;font-size:clamp(2.5rem,6vw,5rem);font-weight:900;line-height:1.08;margin-bottom:1.5rem}
+.hero-title span{background:linear-gradient(135deg,var(--primary),var(--accent),#ff6b35);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:textShine 4s ease infinite}
+.hero-subtitle{font-size:1.1rem;color:var(--text2);max-width:520px;line-height:1.8;margin-bottom:2rem}
+.hero-stats{display:flex;gap:3rem;margin-top:3rem}
+.hero-stat{text-align:center}
+.hero-stat h3{font-size:2.2rem;font-weight:800;background:var(--gradient1);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-stat p{font-size:.82rem;color:var(--text2);margin:0;text-transform:uppercase;letter-spacing:1px}
+.hero-float-card{position:absolute;right:5%;top:20%;animation:float 4s ease-in-out infinite;z-index:2;display:none}
+@media(min-width:1200px){.hero-float-card{display:block}}
+.hero-glow{position:absolute;width:400px;height:400px;background:radial-gradient(circle,rgba(229,9,20,0.12),transparent 70%);border-radius:50%;right:-100px;top:10%;z-index:1;animation:pulse 5s ease infinite}
+
+/* ===== SECTIONS ===== */
+.section-padding{padding:6rem 0}
+.section-title{font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:800;margin-bottom:.5rem}
+.section-subtitle{color:var(--text2);font-size:1rem;margin-bottom:3rem}
+.section-divider{width:50px;height:4px;background:var(--gradient1);border-radius:4px;margin-bottom:1rem}
+.section-bg-dots{background-image:radial-gradient(rgba(255,255,255,.03) 1px,transparent 1px);background-size:30px 30px}
+
+/* ===== MOVIE CARDS ===== */
+.movie-card{background:rgba(13,13,13,.9);border-radius:18px;overflow:hidden;transition:all .45s cubic-bezier(.175,.885,.32,1.275);border:1px solid rgba(255,255,255,.04);cursor:pointer;height:100%;position:relative}
+.movie-card:hover{transform:translateY(-12px) scale(1.02);box-shadow:0 30px 60px rgba(0,0,0,.5),0 0 40px rgba(229,9,20,.1);border-color:rgba(229,9,20,.4)}
+.movie-card-img{position:relative;height:330px;overflow:hidden}
+.movie-card-img img{width:100%;height:100%;object-fit:cover;transition:transform .6s}
+.movie-card:hover .movie-card-img img{transform:scale(1.12)}
+.movie-card-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.95) 0%,rgba(0,0,0,.3) 40%,transparent 70%);display:flex;align-items:flex-end;padding:1.4rem;opacity:0;transition:opacity .35s}
+.movie-card:hover .movie-card-overlay{opacity:1}
+.movie-rating{position:absolute;top:14px;right:14px;background:rgba(0,0,0,.75);backdrop-filter:blur(12px);padding:.35rem .8rem;border-radius:10px;font-size:.82rem;font-weight:700;color:var(--accent);border:1px solid rgba(245,197,24,.25)}
+.movie-card-body{padding:1.2rem 1.3rem}
+.movie-card-body h5{font-weight:700;font-size:1rem;margin-bottom:.4rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#fff}
+.movie-genre{font-size:.8rem;color:var(--text2)}
+.movie-meta{display:flex;gap:1rem;margin-top:.6rem;font-size:.78rem;color:var(--text2)}
+
+/* ===== FEATURED ===== */
+.featured-big-card{border-radius:24px;overflow:hidden;position:relative;height:480px;border:1px solid rgba(255,255,255,.05)}
+.featured-big-card img{width:100%;height:100%;object-fit:cover}
+.featured-big-overlay{position:absolute;inset:0;background:linear-gradient(to right,rgba(5,5,5,.97) 0%,rgba(5,5,5,.7) 45%,transparent 100%);display:flex;align-items:center;padding:3.5rem}
+
+/* ===== SEAT SELECTION ===== */
+.screen-container{text-align:center;margin-bottom:2rem}
+.screen{width:80%;max-width:420px;height:10px;background:var(--gradient1);margin:0 auto 2.5rem;border-radius:50%;box-shadow:0 5px 40px rgba(229,9,20,.5),0 0 80px rgba(229,9,20,.15)}
+.screen-label{font-size:.82rem;color:var(--text2);letter-spacing:4px;text-transform:uppercase;margin-bottom:.5rem}
+.seat-map{display:flex;flex-direction:column;align-items:center;gap:8px}
+.seat-row{display:flex;gap:6px;align-items:center}
+.seat-row-label{width:24px;font-size:.72rem;color:var(--text2);font-weight:700}
+.seat{width:36px;height:36px;border-radius:8px 8px 4px 4px;cursor:pointer;transition:all .25s;display:flex;align-items:center;justify-content:center;font-size:.62rem;font-weight:700;border:2px solid transparent}
+.seat.gold{background:rgba(255,215,0,.12);border-color:rgba(255,215,0,.35);color:var(--gold)}
+.seat.platinum{background:rgba(192,192,192,.12);border-color:rgba(192,192,192,.35);color:var(--platinum)}
+.seat.box{background:rgba(205,127,50,.12);border-color:rgba(205,127,50,.35);color:var(--box-color)}
+.seat:hover:not(.occupied):not(.selected){transform:scale(1.2);box-shadow:0 0 15px rgba(255,255,255,.1)}
+.seat.selected{background:var(--primary)!important;border-color:var(--primary)!important;color:#fff!important;transform:scale(1.1);box-shadow:0 0 20px rgba(229,9,20,.5)}
+.seat.occupied{background:rgba(255,255,255,.03)!important;border-color:transparent!important;color:var(--dark)!important;cursor:not-allowed;opacity:.25}
+
+.booking-summary{background:rgba(13,13,13,.9);border:1px solid rgba(255,255,255,.06);border-radius:20px;padding:1.8rem;position:sticky;top:100px;backdrop-filter:blur(20px)}
+
+/* ===== AUTH FORMS — STUNNING BG ===== */
+.auth-section{min-height:100vh;position:relative;overflow:hidden}
+.auth-bg-login{background:linear-gradient(135deg,#0a0015 0%,#1a0030 25%,#0d1b2a 50%,#1b0a2e 75%,#0a001a 100%);position:absolute;inset:0}
+.auth-bg-login::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(229,9,20,.12),transparent 50%),radial-gradient(ellipse at 80% 20%,rgba(102,126,234,.1),transparent 50%),radial-gradient(ellipse at 50% 80%,rgba(245,197,24,.06),transparent 50%)}
+.auth-bg-login::after{content:'';position:absolute;top:-50%;right:-50%;width:100%;height:100%;background:conic-gradient(from 0deg,transparent,rgba(229,9,20,.05),transparent,rgba(102,126,234,.05),transparent);animation:rotate 20s linear infinite}
+.auth-bg-register{background:linear-gradient(135deg,#001a0a 0%,#0a1628 25%,#0d0d2a 50%,#1a0d28 75%,#0a0a1a 100%);position:absolute;inset:0}
+.auth-bg-register::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 70% 30%,rgba(245,197,24,.08),transparent 50%),radial-gradient(ellipse at 30% 70%,rgba(229,9,20,.1),transparent 50%),radial-gradient(ellipse at 50% 50%,rgba(118,75,162,.08),transparent 60%)}
+.auth-bg-register::after{content:'';position:absolute;bottom:-50%;left:-50%;width:100%;height:100%;background:conic-gradient(from 180deg,transparent,rgba(245,197,24,.04),transparent,rgba(229,9,20,.04),transparent);animation:rotate 25s linear infinite}
+
+.auth-container{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;z-index:2;padding:2rem}
+.auth-card{width:100%;max-width:480px;background:rgba(10,10,15,.75);backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px);border:1px solid rgba(255,255,255,.08);border-radius:28px;padding:3rem;box-shadow:0 30px 80px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.05);position:relative;overflow:hidden}
+.auth-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(229,9,20,.5),rgba(245,197,24,.3),transparent)}
+.auth-card .form-control,.auth-card .form-select{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:#fff;padding:.85rem 1.1rem;border-radius:14px;font-size:.9rem;transition:all .3s}
+.auth-card .form-control:focus,.auth-card .form-select:focus{background:rgba(255,255,255,.07);border-color:var(--primary);box-shadow:0 0 0 4px rgba(229,9,20,.1),0 0 30px rgba(229,9,20,.05);color:#fff}
+.auth-card .form-label{font-size:.82rem;font-weight:600;color:rgba(255,255,255,.6);margin-bottom:.4rem;letter-spacing:.5px}
+.auth-card .input-group-text{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:rgba(255,255,255,.4);border-radius:14px 0 0 14px;transition:all .3s}
+.auth-icon-box{width:70px;height:70px;border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:1.8rem;margin:0 auto 1.5rem}
+.auth-floating-orb{position:absolute;border-radius:50%;filter:blur(60px);z-index:0}
+
+/* ===== ADMIN ===== */
+.admin-sidebar{background:rgba(5,5,10,.98);border-right:1px solid rgba(255,255,255,.05);min-height:100vh;padding:1.5rem 0;width:270px;position:fixed;left:0;top:0;z-index:1040;transition:transform .3s}
+.admin-sidebar .nav-link{padding:.85rem 1.5rem!important;border-radius:0;font-size:.88rem;display:flex;align-items:center;gap:.8rem;border-left:3px solid transparent;transition:all .3s}
+.admin-sidebar .nav-link:hover,.admin-sidebar .nav-link.active{background:rgba(229,9,20,.06);border-left-color:var(--primary);color:#fff!important}
+.admin-sidebar .nav-link::after{display:none}
+.admin-content{margin-left:270px;padding:2rem;min-height:100vh;background:var(--dark)}
+.stat-card{background:rgba(13,13,13,.9);border:1px solid rgba(255,255,255,.05);border-radius:20px;padding:1.8rem;transition:all .4s;position:relative;overflow:hidden}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--gradient1);opacity:0;transition:opacity .3s}
+.stat-card:hover{transform:translateY(-5px);border-color:rgba(229,9,20,.3)}.stat-card:hover::before{opacity:1}
+.stat-card .stat-icon{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.3rem}
+.stat-card h2{font-size:2rem;font-weight:800}
+
+/* ===== TABLES ===== */
+.table-cinema{color:var(--text)}
+.table-cinema thead th{background:rgba(255,255,255,.03);border-color:rgba(255,255,255,.05);font-weight:600;font-size:.8rem;text-transform:uppercase;letter-spacing:1.2px;color:var(--text2);padding:1rem}
+.table-cinema tbody td{border-color:rgba(255,255,255,.03);padding:.9rem 1rem;vertical-align:middle;font-size:.88rem}
+.table-cinema tbody tr{transition:background .3s}
+.table-cinema tbody tr:hover{background:rgba(229,9,20,.04)}
+
+/* ===== MODALS ===== */
+.modal-content{background:rgba(13,13,18,.97)!important;border:1px solid rgba(255,255,255,.08);border-radius:24px;backdrop-filter:blur(30px)}
+.modal-header{border-bottom:1px solid rgba(255,255,255,.06)}
+.modal-footer{border-top:1px solid rgba(255,255,255,.06)}
+
+.toast{background:rgba(13,13,18,.95)!important;backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.08)!important;border-radius:16px!important}
+
+/* ===== TICKET ===== */
+.ticket-card{background:linear-gradient(135deg,rgba(13,13,18,.95),rgba(20,20,30,.95));border:1px solid rgba(255,255,255,.08);border-radius:24px;overflow:hidden;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.4)}
+.ticket-card::before,.ticket-card::after{content:'';position:absolute;width:32px;height:32px;background:var(--dark);border-radius:50%;top:50%;transform:translateY(-50%)}
+.ticket-card::before{left:-16px}.ticket-card::after{right:-16px}
+.ticket-divider{border-top:2px dashed rgba(255,255,255,.08);margin:1.5rem 2rem}
+.ticket-qr{width:120px;height:120px;background:#fff;border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto}
+
+/* ===== ABOUT / CONTACT ===== */
+.about-img-wrap{position:relative;border-radius:24px;overflow:hidden}
+.about-img-wrap img{width:100%;height:420px;object-fit:cover}
+.about-img-wrap::before{content:'';position:absolute;inset:-3px;background:var(--gradient1);border-radius:26px;z-index:-1;opacity:.5}
+.contact-form .form-control{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:#fff;padding:.95rem 1.3rem;border-radius:14px;transition:all .3s}
+.contact-form .form-control:focus{background:rgba(255,255,255,.07);border-color:var(--primary);box-shadow:0 0 0 4px rgba(229,9,20,.1);color:#fff}
+
+/* ===== FOOTER ===== */
+.footer-cinema{background:rgba(5,5,8,.98);border-top:1px solid rgba(255,255,255,.05);padding:5rem 0 2rem;position:relative}
+.footer-cinema::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(229,9,20,.3),rgba(245,197,24,.2),transparent)}
+.footer-cinema h5{font-weight:700;margin-bottom:1.2rem;font-size:1rem}
+.footer-cinema a{color:var(--text2);text-decoration:none;font-size:.88rem;transition:all .3s;display:block;margin-bottom:.6rem}
+.footer-cinema a:hover{color:var(--primary);padding-left:5px}
+
+.stars{color:var(--accent)}
+.stars i{cursor:pointer;transition:transform .2s}
+.stars i:hover{transform:scale(1.3)}
+
+.search-bar{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:50px;padding:.6rem 1.5rem;display:flex;align-items:center;gap:.8rem;transition:border-color .3s}
+.search-bar:focus-within{border-color:rgba(229,9,20,.4)}
+.search-bar input{background:none;border:none;outline:none;color:#fff;flex:1;font-size:.9rem}
+.search-bar input::placeholder{color:var(--text2)}
+
+.badge-cine{background:var(--gradient1);font-size:.72rem;font-weight:600;padding:.35rem .9rem;border-radius:8px;color:#fff}
+.badge-gold{background:linear-gradient(135deg,#ffd700,#ffaa00);color:#000}
+.badge-platinum{background:linear-gradient(135deg,#c0c0c0,#a0a0a0);color:#000}
+.badge-box{background:linear-gradient(135deg,#cd7f32,#a0522d);color:#fff}
+
+.page-section{display:none}.page-section.active{display:block}
+
+.text-gradient{background:linear-gradient(135deg,var(--primary),var(--accent),#ff6b35);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:textShine 4s ease infinite}
+
+.hover-lift{transition:all .4s}.hover-lift:hover{transform:translateY(-8px)}
+
+.form-check-input:checked{background-color:var(--primary);border-color:var(--primary)}
+
+.review-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:18px;padding:1.5rem;margin-bottom:1rem;transition:all .3s}
+.review-card:hover{border-color:rgba(229,9,20,.2)}
+
+.trailer-modal .modal-dialog{max-width:800px}
+.trailer-modal .modal-body{padding:0}
+.trailer-placeholder{width:100%;aspect-ratio:16/9;background:#000;display:flex;align-items:center;justify-content:center;border-radius:0 0 24px 24px}
+
+/* ===== FEATURE ICONS ===== */
+.feature-icon{width:70px;height:70px;border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;margin:0 auto 1.2rem;position:relative}
+.feature-icon::after{content:'';position:absolute;inset:-2px;border-radius:22px;background:inherit;filter:blur(15px);opacity:.4;z-index:-1}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:991px){.admin-sidebar{transform:translateX(-100%)}.admin-sidebar.show{transform:translateX(0)}.admin-content{margin-left:0}.hero-stats{gap:1.5rem}.hero-title{font-size:2.5rem}}
+@media(max-width:576px){.seat{width:28px;height:28px;font-size:.5rem}.hero-stats{flex-wrap:wrap;gap:1rem}.auth-card{padding:2rem;border-radius:20px}}
+</style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="text-center">
+    <div class="loader-ring mb-3"><div></div><div></div><div></div></div>
+    <div class="text-gradient fw-bold fs-5">CineVerse</div>
+    <div class="text-muted small mt-1">Loading experience...</div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index:9999">
+  <div id="appToast" class="toast" role="alert">
+    <div class="toast-header bg-transparent border-0">
+      <i class="bi bi-check-circle-fill text-success me-2" id="toastIcon"></i>
+      <strong class="me-auto text-white" id="toastTitle">Success</strong>
+      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+    </div>
+    <div class="toast-body text-white" id="toastBody"></div>
+  </div>
+</div>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark navbar-cinema fixed-top" id="mainNavbar">
+  <div class="container">
+    <a class="navbar-brand" href="#" onclick="navigateTo('home')"><i class="bi bi-film me-2"></i>CineVerse</a>
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navContent"><span class="navbar-toggler-icon"></span></button>
+    <div class="collapse navbar-collapse" id="navContent">
+      <ul class="navbar-nav mx-auto">
+        <li class="nav-item"><a class="nav-link active" href="#" onclick="navigateTo('home')" data-page="home"><i class="bi bi-house me-1"></i>Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="#" onclick="navigateTo('movies')" data-page="movies"><i class="bi bi-camera-reels me-1"></i>Movies</a></li>
+        <li class="nav-item"><a class="nav-link" href="#" onclick="navigateTo('featured')" data-page="featured"><i class="bi bi-star me-1"></i>Featured</a></li>
+        <li class="nav-item"><a class="nav-link" href="#" onclick="navigateTo('about')" data-page="about"><i class="bi bi-info-circle me-1"></i>About</a></li>
+        <li class="nav-item"><a class="nav-link" href="#" onclick="navigateTo('contact')" data-page="contact"><i class="bi bi-envelope me-1"></i>Contact</a></li>
+      </ul>
+      <div class="d-flex align-items-center gap-2" id="navAuth">
+        <button class="btn btn-outline-cine btn-sm" onclick="navigateTo('login')"><i class="bi bi-box-arrow-in-right me-1"></i>Login</button>
+        <button class="btn btn-cine btn-sm" onclick="navigateTo('register')"><i class="bi bi-person-plus me-1"></i>Register</button>
+      </div>
+      <div class="d-flex align-items-center gap-2 d-none" id="navUser">
+        <span class="text-white me-2 fw-500" id="navUserName"></span>
+        <button class="btn btn-gold btn-sm" id="adminDashBtn" onclick="navigateTo('admin')" style="display:none"><i class="bi bi-speedometer2 me-1"></i>Admin Panel</button>
+        <button class="btn btn-sm" style="color:var(--text2);border:1px solid rgba(255,255,255,.1);border-radius:50px;padding:.3rem 1rem" onclick="logout()"><i class="bi bi-box-arrow-right me-1"></i>Logout</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ===== HOME ===== -->
+<section class="page-section active" id="page-home">
+  <div class="hero-section">
+    <div class="hero-bg"></div>
+    <div class="particles-bg" id="heroParticles"></div>
+    <div class="hero-glow"></div>
+    <div class="container hero-content">
+      <div class="row align-items-center">
+        <div class="col-lg-7 animate-fade-up">
+          <div class="hero-badge"><i class="bi bi-lightning-fill"></i> Now Streaming 2025</div>
+          <h1 class="hero-title text-white">Your Ultimate <span>Cinema</span> Experience</h1>
+          <p class="hero-subtitle">Book your favourite movie tickets online with premium seat selection. Gold, Platinum & Box — every seat tells a story.</p>
+          <div class="d-flex gap-3 flex-wrap">
+            <button class="btn btn-cine btn-lg px-4" onclick="navigateTo('movies')"><i class="bi bi-ticket-perforated me-2"></i>Book Now</button>
+            <button class="btn btn-outline-cine btn-lg px-4" onclick="navigateTo('featured')"><i class="bi bi-play-circle me-2"></i>Featured</button>
+          </div>
+          <div class="hero-stats">
+            <div class="hero-stat"><h3>500+</h3><p>Movies</p></div>
+            <div class="hero-stat"><h3>50K+</h3><p>Users</p></div>
+            <div class="hero-stat"><h3>100+</h3><p>Theaters</p></div>
+          </div>
+        </div>
+        <div class="col-lg-5 d-none d-lg-block">
+          <div class="text-center animate-fade" style="animation-delay:.3s">
+            <img src="https://images.pexels.com/photos/7991491/pexels-photo-7991491.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=500&w=400" class="rounded-4" style="width:80%;box-shadow:0 30px 80px rgba(0,0,0,.6);border:2px solid rgba(255,255,255,.08);animation:float 5s ease-in-out infinite" alt="">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NOW SHOWING -->
+  <div class="section-padding section-bg-dots" style="background-color:var(--dark)">
+    <div class="container">
+      <div class="text-center mb-5 animate-fade-up">
+        <div class="section-divider mx-auto"></div>
+        <h2 class="section-title text-white">Now <span class="text-gradient">Showing</span></h2>
+        <p class="section-subtitle">Catch the latest blockbusters in theaters near you</p>
+      </div>
+      <div class="row g-4" id="homeMovieGrid"></div>
+      <div class="text-center mt-5">
+        <button class="btn btn-outline-cine px-5" onclick="navigateTo('movies')"><i class="bi bi-grid me-2"></i>View All Movies</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- WHY CHOOSE -->
+  <div class="section-padding" style="background:var(--gradient2)">
+    <div class="container">
+      <div class="text-center mb-5"><div class="section-divider mx-auto"></div><h2 class="section-title text-white">Why Choose <span class="text-gradient">CineVerse</span></h2></div>
+      <div class="row g-4">
+        <div class="col-lg-4 col-md-6"><div class="glass-card p-4 text-center hover-lift h-100">
+          <div class="feature-icon" style="background:rgba(229,9,20,.12)"><i class="bi bi-lightning-charge-fill text-danger"></i></div>
+          <h5 class="fw-bold text-white">Instant Booking</h5><p class="text-muted mb-0 small">Book tickets in seconds. No queues, no hassle, just pure cinema magic.</p>
+        </div></div>
+        <div class="col-lg-4 col-md-6"><div class="glass-card p-4 text-center hover-lift h-100">
+          <div class="feature-icon" style="background:rgba(40,167,69,.12)"><i class="bi bi-shield-fill-check text-success"></i></div>
+          <h5 class="fw-bold text-white">Secure Payments</h5><p class="text-muted mb-0 small">Industry-standard encryption protects every transaction you make.</p>
+        </div></div>
+        <div class="col-lg-4 col-md-6"><div class="glass-card p-4 text-center hover-lift h-100">
+          <div class="feature-icon" style="background:rgba(102,126,234,.12)"><i class="bi bi-gem text-info"></i></div>
+          <h5 class="fw-bold text-white">Premium Seats</h5><p class="text-muted mb-0 small">Gold, Platinum & Box classes — choose your perfect viewing experience.</p>
+        </div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer-cinema">
+    <div class="container">
+      <div class="row g-4">
+        <div class="col-lg-4">
+          <h4 class="fw-bold mb-3" style="font-family:'Playfair Display',serif"><span class="text-gradient"><i class="bi bi-film me-2"></i>CineVerse</span></h4>
+          <p class="text-muted small">Your premium destination for movie booking. Experience cinema like never before.</p>
+          <div class="d-flex gap-3 mt-3">
+            <a href="#" class="text-white fs-5"><i class="bi bi-facebook"></i></a>
+            <a href="#" class="text-white fs-5"><i class="bi bi-twitter-x"></i></a>
+            <a href="#" class="text-white fs-5"><i class="bi bi-instagram"></i></a>
+            <a href="#" class="text-white fs-5"><i class="bi bi-youtube"></i></a>
+          </div>
+        </div>
+        <div class="col-lg-2 col-6"><h5 class="text-white">Links</h5><a href="#" onclick="navigateTo('home')">Home</a><a href="#" onclick="navigateTo('movies')">Movies</a><a href="#" onclick="navigateTo('featured')">Featured</a><a href="#" onclick="navigateTo('about')">About</a></div>
+        <div class="col-lg-2 col-6"><h5 class="text-white">Support</h5><a href="#" onclick="navigateTo('contact')">Contact</a><a href="#">FAQ</a><a href="#">Terms</a><a href="#">Privacy</a></div>
+        <div class="col-lg-4"><h5 class="text-white">Newsletter</h5><p class="text-muted small">Get updates on the latest releases.</p>
+          <div class="input-group"><input type="email" class="form-control" style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:#fff;border-radius:14px 0 0 14px" placeholder="Your email"><button class="btn btn-cine" style="border-radius:0 14px 14px 0" onclick="showToast('Subscribed!','You will receive updates.','success')">Subscribe</button></div>
+        </div>
+      </div>
+      <hr style="border-color:rgba(255,255,255,.05)" class="my-4">
+      <p class="text-center text-muted small mb-0">&copy; 2025 CineVerse. All rights reserved. | Crafted with <i class="bi bi-heart-fill text-danger"></i></p>
+    </div>
+  </footer>
+</section>
+
+<!-- ===== LOGIN ===== -->
+<section class="page-section" id="page-login">
+  <div class="auth-section">
+    <div class="auth-bg-login"></div>
+    <div class="particles-bg" id="loginParticles"></div>
+    <!-- Floating orbs -->
+    <div class="auth-floating-orb" style="width:300px;height:300px;background:rgba(229,9,20,.08);top:10%;left:-5%"></div>
+    <div class="auth-floating-orb" style="width:200px;height:200px;background:rgba(102,126,234,.08);bottom:15%;right:5%"></div>
+    <div class="auth-floating-orb" style="width:150px;height:150px;background:rgba(245,197,24,.06);top:50%;right:20%"></div>
+    <div class="auth-container">
+      <div class="auth-card animate-scale">
+        <div class="text-center">
+          <div class="auth-icon-box" style="background:linear-gradient(135deg,rgba(229,9,20,.15),rgba(229,9,20,.05))"><i class="bi bi-person-fill text-danger"></i></div>
+          <h2 class="fw-bold text-white mb-1" style="font-family:'Playfair Display',serif;font-size:1.8rem">Welcome Back</h2>
+          <p class="text-muted small mb-4">Sign in to your CineVerse account</p>
+        </div>
+        <form id="loginForm" onsubmit="return handleLogin(event)">
+          <div class="mb-3">
+            <label class="form-label">Email Address</label>
+            <div class="input-group">
+              <span class="input-group-text" style="border-radius:14px 0 0 14px"><i class="bi bi-envelope"></i></span>
+              <input type="email" class="form-control" id="loginEmail" placeholder="Enter your email" required style="border-radius:0 14px 14px 0">
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Password</label>
+            <div class="input-group">
+              <span class="input-group-text" style="border-radius:14px 0 0 14px"><i class="bi bi-lock"></i></span>
+              <input type="password" class="form-control" id="loginPassword" placeholder="Enter your password" required style="border-radius:0 14px 14px 0">
+            </div>
+          </div>
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="form-check"><input class="form-check-input" type="checkbox" id="rememberMe"><label class="form-check-label small text-muted" for="rememberMe">Remember me</label></div>
+            <a href="#" class="small" style="color:var(--primary)">Forgot Password?</a>
+          </div>
+          <button type="submit" class="btn btn-cine w-100 py-3 mb-3 fw-bold"><i class="bi bi-box-arrow-in-right me-2"></i>Sign In</button>
+          <p class="text-center text-muted small mb-0">No account? <a href="#" onclick="navigateTo('register')" style="color:var(--primary);font-weight:600">Create One</a></p>
+        </form>
+        <div class="mt-4 p-3 rounded-3" style="background:rgba(229,9,20,.06);border:1px solid rgba(229,9,20,.15)">
+          <p class="text-center small mb-0" style="color:rgba(255,255,255,.5)"><i class="bi bi-shield-lock me-1"></i>Admin: <strong class="text-white">admin@cineverse.com</strong> / <strong class="text-white">admin123</strong></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== REGISTER ===== -->
+<section class="page-section" id="page-register">
+  <div class="auth-section">
+    <div class="auth-bg-register"></div>
+    <div class="particles-bg" id="registerParticles"></div>
+    <div class="auth-floating-orb" style="width:250px;height:250px;background:rgba(245,197,24,.07);top:5%;right:10%"></div>
+    <div class="auth-floating-orb" style="width:300px;height:300px;background:rgba(118,75,162,.06);bottom:10%;left:-5%"></div>
+    <div class="auth-container">
+      <div class="auth-card animate-scale" style="max-width:520px">
+        <div class="text-center">
+          <div class="auth-icon-box" style="background:linear-gradient(135deg,rgba(245,197,24,.12),rgba(229,9,20,.08))"><i class="bi bi-person-plus-fill" style="color:var(--accent)"></i></div>
+          <h2 class="fw-bold text-white mb-1" style="font-family:'Playfair Display',serif;font-size:1.8rem">Create Account</h2>
+          <p class="text-muted small mb-4">Join the CineVerse community today</p>
+        </div>
+        <form id="registerForm" onsubmit="return handleRegister(event)">
+          <div class="row g-3">
+            <div class="col-6"><label class="form-label">First Name</label><input type="text" class="form-control" id="regFirstName" placeholder="First name" required></div>
+            <div class="col-6"><label class="form-label">Last Name</label><input type="text" class="form-control" id="regLastName" placeholder="Last name" required></div>
+          </div>
+          <div class="mb-3 mt-3"><label class="form-label">Email</label><input type="email" class="form-control" id="regEmail" placeholder="your@email.com" required></div>
+          <div class="mb-3"><label class="form-label">Phone</label><input type="tel" class="form-control" id="regPhone" placeholder="+1 (555) 000-0000" required></div>
+          <div class="row g-3 mb-3">
+            <div class="col-6"><label class="form-label">Password</label><input type="password" class="form-control" id="regPassword" placeholder="Min 6 chars" required minlength="6"></div>
+            <div class="col-6"><label class="form-label">Confirm</label><input type="password" class="form-control" id="regConfirmPassword" placeholder="Re-type" required></div>
+          </div>
+          <div class="form-check mb-4"><input class="form-check-input" type="checkbox" id="agreeTerms" required><label class="form-check-label small text-muted" for="agreeTerms">I agree to <a href="#" style="color:var(--primary)">Terms</a></label></div>
+          <button type="submit" class="btn btn-cine w-100 py-3 mb-3 fw-bold"><i class="bi bi-person-plus me-2"></i>Create Account</button>
+          <p class="text-center text-muted small mb-0">Have an account? <a href="#" onclick="navigateTo('login')" style="color:var(--primary);font-weight:600">Sign In</a></p>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== MOVIES ===== -->
+<section class="page-section" id="page-movies">
+  <div style="padding-top:100px" class="section-padding section-bg-dots" style="background-color:var(--dark)">
+    <div class="container">
+      <div class="row align-items-center mb-5">
+        <div class="col-lg-6"><div class="section-divider"></div><h2 class="section-title text-white">All <span class="text-gradient">Movies</span></h2><p class="text-muted mb-0">Browse & book your next cinematic experience</p></div>
+        <div class="col-lg-6">
+          <div class="d-flex gap-3 justify-content-lg-end mt-3 mt-lg-0 flex-wrap">
+            <div class="search-bar flex-grow-1" style="max-width:300px"><i class="bi bi-search text-muted"></i><input type="text" id="movieSearch" placeholder="Search movies..." oninput="filterMovies()"></div>
+            <select class="form-select" id="genreFilter" style="width:auto;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:#fff;border-radius:50px;padding:.6rem 2rem .6rem 1rem" onchange="filterMovies()">
+              <option value="">All Genres</option><option>Action</option><option>Drama</option><option>Sci-Fi</option><option>Comedy</option><option>Horror</option><option>Thriller</option><option>Romance</option><option>Animation</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="row g-4" id="allMovieGrid"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== MOVIE DETAILS ===== -->
+<section class="page-section" id="page-movie-details"><div style="padding-top:80px"><div id="movieDetailContent"></div></div></section>
+
+<!-- ===== BOOKING ===== -->
+<section class="page-section" id="page-booking">
+  <div style="padding-top:100px" class="section-padding">
+    <div class="container"><div class="row">
+      <div class="col-lg-8">
+        <div class="section-divider"></div>
+        <h2 class="section-title text-white mb-2">Select Your <span class="text-gradient">Seats</span></h2>
+        <p class="text-muted mb-4" id="bookingMovieTitle"></p>
+        <div class="glass-card p-4 mb-4">
+          <h6 class="fw-bold text-white mb-3"><i class="bi bi-calendar3 me-2 text-danger"></i>Select Date & Time</h6>
+          <div class="d-flex gap-2 flex-wrap mb-3" id="showDates"></div>
+          <div class="d-flex gap-2 flex-wrap" id="showTimes"></div>
+        </div>
+        <div class="glass-card p-4 mb-4">
+          <div class="screen-container"><p class="screen-label">Screen</p><div class="screen"></div></div>
+          <div class="d-flex justify-content-center gap-4 mb-4 flex-wrap">
+            <div class="d-flex align-items-center gap-2"><div class="seat gold" style="width:22px;height:22px;cursor:default;font-size:0"></div><small class="text-muted">Gold ₹250</small></div>
+            <div class="d-flex align-items-center gap-2"><div class="seat platinum" style="width:22px;height:22px;cursor:default;font-size:0"></div><small class="text-muted">Platinum ₹350</small></div>
+            <div class="d-flex align-items-center gap-2"><div class="seat box" style="width:22px;height:22px;cursor:default;font-size:0"></div><small class="text-muted">Box ₹500</small></div>
+            <div class="d-flex align-items-center gap-2"><div style="width:22px;height:22px;background:var(--primary);border-radius:6px 6px 3px 3px"></div><small class="text-muted">Selected</small></div>
+            <div class="d-flex align-items-center gap-2"><div class="seat occupied" style="width:22px;height:22px;cursor:default;font-size:0"></div><small class="text-muted">Taken</small></div>
+          </div>
+          <div class="seat-map" id="seatMap"></div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="booking-summary">
+          <h5 class="fw-bold text-white mb-3"><i class="bi bi-receipt me-2 text-danger"></i>Booking Summary</h5>
+          <div id="summaryContent"><div class="text-center py-4 text-muted"><i class="bi bi-ticket-perforated" style="font-size:2rem"></i><p class="mt-2 mb-0">Select seats to see summary</p></div></div>
+          <button class="btn btn-cine w-100 mt-3" id="confirmBookingBtn" onclick="confirmBooking()" disabled><i class="bi bi-check2-circle me-2"></i>Confirm Booking</button>
+        </div>
+      </div>
+    </div></div>
+  </div>
+</section>
+
+<!-- ===== CONFIRMATION ===== -->
+<section class="page-section" id="page-confirmation">
+  <div class="auth-section">
+    <div class="auth-bg-login"></div>
+    <div class="auth-container" style="min-height:100vh">
+      <div class="animate-scale" style="width:100%;max-width:560px">
+        <div class="text-center mb-4">
+          <div style="width:90px;height:90px;background:rgba(40,167,69,.1);border:2px solid rgba(40,167,69,.3);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.2rem;animation:pulse 2s ease infinite"><i class="bi bi-check-lg text-success" style="font-size:2.5rem"></i></div>
+          <h2 class="fw-bold text-white">Booking Confirmed!</h2>
+          <p class="text-muted">Your tickets are ready — enjoy the show!</p>
+        </div>
+        <div class="ticket-card" id="ticketCard"></div>
+        <div class="d-flex gap-3 justify-content-center mt-4">
+          <button class="btn btn-cine" onclick="navigateTo('home')"><i class="bi bi-house me-2"></i>Home</button>
+          <button class="btn btn-outline-cine" onclick="navigateTo('movies')"><i class="bi bi-camera-reels me-2"></i>More Movies</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FEATURED ===== -->
+<section class="page-section" id="page-featured">
+  <div style="padding-top:100px" class="section-padding">
+    <div class="container">
+      <div class="text-center mb-5"><div class="section-divider mx-auto"></div><h2 class="section-title text-white">Featured <span class="text-gradient">Picks</span></h2><p class="section-subtitle">Handpicked by our editors just for you</p></div>
+      <div class="featured-big-card mb-5" id="featuredHero"></div>
+      <div class="row g-4" id="featuredGrid"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ABOUT ===== -->
+<section class="page-section" id="page-about">
+  <div style="padding-top:100px" class="section-padding">
+    <div class="container">
+      <div class="row align-items-center g-5 mb-5">
+        <div class="col-lg-6"><div class="about-img-wrap"><img src="https://images.pexels.com/photos/7991486/pexels-photo-7991486.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=800&w=1200" alt="Cinema"></div></div>
+        <div class="col-lg-6">
+          <div class="section-divider"></div>
+          <h2 class="section-title text-white">About <span class="text-gradient">CineVerse</span></h2>
+          <p class="text-muted mt-3 lh-lg">CineVerse is the ultimate online movie booking platform designed to bring the magic of cinema to your fingertips. Founded in 2020, we serve 50,000+ movie lovers across 100+ theaters.</p>
+          <p class="text-muted lh-lg">With Gold, Platinum & Box seat classes, we guarantee every viewer gets the experience they deserve.</p>
+          <div class="row g-3 mt-3">
+            <div class="col-6"><div class="glass-card p-3 text-center"><h4 class="text-gradient fw-bold mb-0">500+</h4><small class="text-muted">Movies</small></div></div>
+            <div class="col-6"><div class="glass-card p-3 text-center"><h4 class="text-gradient fw-bold mb-0">100+</h4><small class="text-muted">Theaters</small></div></div>
+            <div class="col-6"><div class="glass-card p-3 text-center"><h4 class="text-gradient fw-bold mb-0">50K+</h4><small class="text-muted">Users</small></div></div>
+            <div class="col-6"><div class="glass-card p-3 text-center"><h4 class="text-gradient fw-bold mb-0">4.9★</h4><small class="text-muted">Rating</small></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="text-center mt-5 mb-4"><h3 class="fw-bold text-white">Our <span class="text-gradient">Team</span></h3></div>
+      <div class="row g-4 justify-content-center">
+        <div class="col-md-4 col-sm-6"><div class="glass-card p-4 text-center hover-lift"><div class="feature-icon mx-auto" style="background:var(--gradient1)"><i class="bi bi-person-fill text-white"></i></div><h6 class="fw-bold text-white mt-3">Alex Johnson</h6><small class="text-muted">CEO & Founder</small></div></div>
+        <div class="col-md-4 col-sm-6"><div class="glass-card p-4 text-center hover-lift"><div class="feature-icon mx-auto" style="background:var(--gradient3)"><i class="bi bi-person-fill text-white"></i></div><h6 class="fw-bold text-white mt-3">Sarah Chen</h6><small class="text-muted">CTO</small></div></div>
+        <div class="col-md-4 col-sm-6"><div class="glass-card p-4 text-center hover-lift"><div class="feature-icon mx-auto" style="background:var(--gradient4)"><i class="bi bi-person-fill text-white"></i></div><h6 class="fw-bold text-white mt-3">Mike Peters</h6><small class="text-muted">Head of Operations</small></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CONTACT ===== -->
+<section class="page-section" id="page-contact">
+  <div style="padding-top:100px" class="section-padding section-bg-dots">
+    <div class="container"><div class="row g-5">
+      <div class="col-lg-5">
+        <div class="section-divider"></div><h2 class="section-title text-white">Get In <span class="text-gradient">Touch</span></h2>
+        <p class="text-muted mt-3 mb-4">Have questions? We'd love to hear from you.</p>
+        <div class="glass-card p-4 mb-3 hover-lift"><div class="d-flex gap-3 align-items-center"><div class="feature-icon" style="background:rgba(229,9,20,.1);width:50px;height:50px;border-radius:14px;font-size:1.1rem"><i class="bi bi-geo-alt-fill text-danger"></i></div><div><h6 class="text-white mb-0 fw-bold small">Address</h6><small class="text-muted">123 Cinema Street, Movie City</small></div></div></div>
+        <div class="glass-card p-4 mb-3 hover-lift"><div class="d-flex gap-3 align-items-center"><div class="feature-icon" style="background:rgba(102,126,234,.1);width:50px;height:50px;border-radius:14px;font-size:1.1rem"><i class="bi bi-envelope-fill text-info"></i></div><div><h6 class="text-white mb-0 fw-bold small">Email</h6><small class="text-muted">support@cineverse.com</small></div></div></div>
+        <div class="glass-card p-4 hover-lift"><div class="d-flex gap-3 align-items-center"><div class="feature-icon" style="background:rgba(40,167,69,.1);width:50px;height:50px;border-radius:14px;font-size:1.1rem"><i class="bi bi-telephone-fill text-success"></i></div><div><h6 class="text-white mb-0 fw-bold small">Phone</h6><small class="text-muted">+1 (555) 123-4567</small></div></div></div>
+      </div>
+      <div class="col-lg-7">
+        <div class="glass-card-strong p-4 p-lg-5">
+          <h4 class="fw-bold text-white mb-4"><i class="bi bi-send me-2 text-danger"></i>Send Message</h4>
+          <form class="contact-form" onsubmit="return handleContact(event)">
+            <div class="row g-3"><div class="col-md-6"><input type="text" class="form-control" placeholder="Your Name" required></div><div class="col-md-6"><input type="email" class="form-control" placeholder="Your Email" required></div></div>
+            <input type="text" class="form-control mt-3" placeholder="Subject" required>
+            <textarea class="form-control mt-3" rows="5" placeholder="Your Message" required></textarea>
+            <button type="submit" class="btn btn-cine mt-4 px-5"><i class="bi bi-send me-2"></i>Send Message</button>
+          </form>
+        </div>
+      </div>
+    </div></div>
+  </div>
+</section>
+
+<!-- ===== ADMIN ===== -->
+<section class="page-section" id="page-admin">
+  <div class="admin-sidebar" id="adminSidebar">
+    <div class="px-4 mb-4">
+      <h4 class="fw-bold mb-0" style="font-family:'Playfair Display',serif"><span class="text-gradient"><i class="bi bi-film me-2"></i>CineVerse</span></h4>
+      <small class="text-muted">Admin Control Center</small>
+    </div>
+    <nav class="nav flex-column">
+      <a class="nav-link active" href="#" onclick="showAdminTab('dashboard')"><i class="bi bi-speedometer2"></i>Dashboard</a>
+      <a class="nav-link" href="#" onclick="showAdminTab('a-movies')"><i class="bi bi-camera-reels"></i>Manage Movies</a>
+      <a class="nav-link" href="#" onclick="showAdminTab('a-theaters')"><i class="bi bi-building"></i>Manage Theaters</a>
+      <a class="nav-link" href="#" onclick="showAdminTab('a-shows')"><i class="bi bi-calendar-event"></i>Manage Shows</a>
+      <a class="nav-link" href="#" onclick="showAdminTab('a-users')"><i class="bi bi-people"></i>Users</a>
+      <a class="nav-link" href="#" onclick="showAdminTab('a-bookings')"><i class="bi bi-ticket-perforated"></i>Bookings</a>
+      <a class="nav-link" href="#" onclick="showAdminTab('a-reviews')"><i class="bi bi-chat-dots"></i>Reviews</a>
+      <hr style="border-color:rgba(255,255,255,.05);margin:1rem 1.5rem">
+      <a class="nav-link" href="#" onclick="navigateTo('home')"><i class="bi bi-house"></i>Back to Site</a>
+      <a class="nav-link" href="#" onclick="logout()"><i class="bi bi-box-arrow-right"></i>Logout</a>
+    </nav>
+  </div>
+  <div class="admin-content" id="adminContent">
+    <button class="btn btn-cine d-lg-none mb-3" onclick="document.getElementById('adminSidebar').classList.toggle('show')"><i class="bi bi-list me-2"></i>Menu</button>
+    <div class="admin-tab active" id="tab-dashboard">
+      <h3 class="fw-bold text-white mb-1"><i class="bi bi-speedometer2 me-2 text-danger"></i>Dashboard</h3><p class="text-muted mb-4">Welcome back, Admin!</p>
+      <div class="row g-4 mb-4">
+        <div class="col-xl-3 col-sm-6"><div class="stat-card"><div class="d-flex justify-content-between align-items-start"><div><p class="text-muted mb-1 small">Movies</p><h2 class="text-white mb-0" id="statMovies">0</h2></div><div class="stat-icon" style="background:rgba(229,9,20,.1)"><i class="bi bi-camera-reels text-danger"></i></div></div></div></div>
+        <div class="col-xl-3 col-sm-6"><div class="stat-card"><div class="d-flex justify-content-between align-items-start"><div><p class="text-muted mb-1 small">Users</p><h2 class="text-white mb-0" id="statUsers">0</h2></div><div class="stat-icon" style="background:rgba(102,126,234,.1)"><i class="bi bi-people text-info"></i></div></div></div></div>
+        <div class="col-xl-3 col-sm-6"><div class="stat-card"><div class="d-flex justify-content-between align-items-start"><div><p class="text-muted mb-1 small">Bookings</p><h2 class="text-white mb-0" id="statBookings">0</h2></div><div class="stat-icon" style="background:rgba(245,197,24,.1)"><i class="bi bi-ticket-perforated text-warning"></i></div></div></div></div>
+        <div class="col-xl-3 col-sm-6"><div class="stat-card"><div class="d-flex justify-content-between align-items-start"><div><p class="text-muted mb-1 small">Revenue</p><h2 class="text-white mb-0" id="statRevenue">₹0</h2></div><div class="stat-icon" style="background:rgba(40,167,69,.1)"><i class="bi bi-currency-rupee text-success"></i></div></div></div></div>
+      </div>
+      <div class="glass-card p-4 mb-4"><h5 class="fw-bold text-white mb-3"><i class="bi bi-clock-history me-2 text-danger"></i>Recent Bookings</h5><div class="table-responsive"><table class="table table-cinema"><thead><tr><th>ID</th><th>User</th><th>Movie</th><th>Seats</th><th>Amount</th><th>Date</th><th>Status</th></tr></thead><tbody id="recentBookingsTable"></tbody></table></div></div>
+      <div class="row g-4"><div class="col-md-6"><div class="glass-card p-4"><h6 class="fw-bold text-white mb-3"><i class="bi bi-bar-chart me-2 text-info"></i>Genre Distribution</h6><div id="genreChart"></div></div></div><div class="col-md-6"><div class="glass-card p-4"><h6 class="fw-bold text-white mb-3"><i class="bi bi-graph-up me-2 text-success"></i>Weekly Bookings</h6><div id="weekChart"></div></div></div></div>
+    </div>
+    <div class="admin-tab" id="tab-a-movies" style="display:none"><div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3"><div><h3 class="fw-bold text-white mb-1"><i class="bi bi-camera-reels me-2 text-danger"></i>Manage Movies</h3><p class="text-muted mb-0">Add, edit or delete movies</p></div><button class="btn btn-cine" onclick="openMovieModal()"><i class="bi bi-plus-lg me-2"></i>Add Movie</button></div><div class="glass-card p-4"><div class="table-responsive"><table class="table table-cinema"><thead><tr><th>Poster</th><th>Title</th><th>Genre</th><th>Rating</th><th>Duration</th><th>Actions</th></tr></thead><tbody id="adminMoviesTable"></tbody></table></div></div></div>
+    <div class="admin-tab" id="tab-a-theaters" style="display:none"><div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3"><div><h3 class="fw-bold text-white mb-1"><i class="bi bi-building me-2 text-danger"></i>Theaters</h3><p class="text-muted mb-0">Manage locations</p></div><button class="btn btn-cine" onclick="openTheaterModal()"><i class="bi bi-plus-lg me-2"></i>Add Theater</button></div><div class="glass-card p-4"><div class="table-responsive"><table class="table table-cinema"><thead><tr><th>#</th><th>Name</th><th>Location</th><th>Screens</th><th>Capacity</th><th>Status</th><th>Actions</th></tr></thead><tbody id="adminTheatersTable"></tbody></table></div></div></div>
+    <div class="admin-tab" id="tab-a-shows" style="display:none"><div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3"><div><h3 class="fw-bold text-white mb-1"><i class="bi bi-calendar-event me-2 text-danger"></i>Shows</h3><p class="text-muted mb-0">Schedule showtimes</p></div><button class="btn btn-cine" onclick="openShowModal()"><i class="bi bi-plus-lg me-2"></i>Add Show</button></div><div class="glass-card p-4"><div class="table-responsive"><table class="table table-cinema"><thead><tr><th>#</th><th>Movie</th><th>Theater</th><th>Date</th><th>Time</th><th>Screen</th><th>Actions</th></tr></thead><tbody id="adminShowsTable"></tbody></table></div></div></div>
+    <div class="admin-tab" id="tab-a-users" style="display:none"><h3 class="fw-bold text-white mb-1"><i class="bi bi-people me-2 text-danger"></i>Users</h3><p class="text-muted mb-4">All registered users</p><div class="glass-card p-4"><div class="table-responsive"><table class="table table-cinema"><thead><tr><th>#</th><th>Name</th><th>Email</th><th>Phone</th><th>Role</th><th>Joined</th><th>Bookings</th><th>Actions</th></tr></thead><tbody id="adminUsersTable"></tbody></table></div></div></div>
+    <div class="admin-tab" id="tab-a-bookings" style="display:none"><h3 class="fw-bold text-white mb-1"><i class="bi bi-ticket-perforated me-2 text-danger"></i>All Bookings</h3><p class="text-muted mb-4">Complete booking records</p><div class="glass-card p-4"><div class="table-responsive"><table class="table table-cinema"><thead><tr><th>ID</th><th>User</th><th>Movie</th><th>Theater</th><th>Date</th><th>Seats</th><th>Amount</th><th>Status</th></tr></thead><tbody id="adminBookingsTable"></tbody></table></div></div></div>
+    <div class="admin-tab" id="tab-a-reviews" style="display:none"><h3 class="fw-bold text-white mb-1"><i class="bi bi-chat-dots me-2 text-danger"></i>Reviews</h3><p class="text-muted mb-4">All user reviews</p><div class="glass-card p-4"><div class="table-responsive"><table class="table table-cinema"><thead><tr><th>#</th><th>User</th><th>Movie</th><th>Rating</th><th>Review</th><th>Date</th><th>Actions</th></tr></thead><tbody id="adminReviewsTable"></tbody></table></div></div></div>
+  </div>
+</section>
+
+<!-- MODALS -->
+<div class="modal fade" id="movieModal" tabindex="-1"><div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content"><div class="modal-header px-4 pt-4"><h5 class="modal-title text-white fw-bold" id="movieModalTitle"><i class="bi bi-camera-reels me-2 text-danger"></i>Add Movie</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div><div class="modal-body p-4"><form id="movieForm" onsubmit="return saveMovie(event)"><input type="hidden" id="movieEditId"><div class="row g-3"><div class="col-md-6"><label class="form-label text-muted small fw-bold">Title</label><input type="text" class="form-control" id="mTitle" style="background:var(--glass);border:1px solid var(--glass2);color:#fff;border-radius:12px" required></div><div class="col-md-3"><label class="form-label text-muted small fw-bold">Genre</label><select class="form-select" id="mGenre" style="background:var(--glass);border:1px solid var(--glass2);color:#fff;border-radius:12px" required><option value="">Select</option><option>Action</option><option>Drama</option><option>Sci-Fi</option><option>Comedy</option><option>Horror</option><option>Thriller</option><option>Romance</option><option>Animation</option></select></div><div class="col-md-3"><label class="form-label text-muted small fw-bold">Rating</label><input type="number" class="form-control" id="mRating" min="1" max="10" step="0.1" style="background:var(--glass);border:1px solid var(--glass2);color:#fff;border-radius:12px" required></div><div class="col-md-4"><label class="form-label text-muted small fw-bold">Duration</label><input type="text" class="form-control" id="mDuration" placeholder="2h 30m" style="background:var(--glass);border:1px solid var(--glass2);color:#fff;border-radius:12px" required></div><div class="col-md-4"><label class="form-label text-muted small fw-bold">Language</label><input type="text" class="form-control" id="mLanguage" style="background:var(--glass);border:1px solid var(--glass2);color:#fff;border-radius:12px" required></div><div class="col-md-4"><label class="form-label text-muted small fw-bold">Release Date</label><input type="date" class="form-control" id="mRelease" style="background:var(--glass);border:1px solid var(--glass2);color:#fff;border-radius:12px" required></div><div class="col-md-6"><label class="form-label text-muted small fw-bold">Director</label><input type="text" class="form-control" id="mDirector" style="background:var(--glass);border:1px solid var(--glass2);color:#fff;border-radius:12px" required></div><div class="col-md-6"><label class="form-label text-muted small fw-bold">Cast</label><input type="text" class="form-control" id="mCast" style="background:var(--glass);border:1px solid var(--glass2);color:#fff;border-radius:12px" required></div><div class="col-12"><label class="form-label text-muted small fw-bold">Poster URL</label><input type="url" class="form-control" id="mPoster" style="background:var(--glass);border:1px solid var(--glass2);color:#fff;border-radius:12px" required></div><div class="col-12"><label class="form-label text-muted small fw-bold">Description</label><textarea class="form-control" id="mDesc" rows="3" style="background:var(--glass);border:1px solid var(--glass2);color:#fff;border-radius:12px" required></textarea></div><div class="col-12"><label class="form-label text-muted small fw-bold">Trailer URL</label><input type="url" class="form-control" id="mTrailer" style="background:var(--glass);border:1px solid var(--glass2);color:#fff;border-radius:12px"></div></div><div class="mt-4 d-flex gap-2 justify-content-end"><button type="button" class="btn btn-outline-cine" data-bs-dismiss="modal">Cancel</button><button type="submit" class="btn btn-cine"><i class="bi bi-check-lg me-2"></i>Save</button></div></form></div></div></div></div>
+<div class="modal fade" id="theaterModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header px-4 pt-4"><h5 class="modal-title text-white fw-bold"><i class="bi bi-building me-2 text-danger"></i>Theater</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div><div class="modal-body p-4"><form id="theaterForm" onsubmit="return saveTheater(event)"><input type="hidden" id="theaterEditId"><div class="mb-3"><label class="form-label text-muted small fw-bold">Name</label><input type="text" class="form-control" id="tName" style="background:var(--glass);border:1px solid var(--glass2);color:#fff;border-radius:12px" required></div><div class="mb-3"><label class="form-label text-muted small fw-bold">Location</label><input type="text" class="form-control" id="tLocation" style="background:var(--glass);border:1px solid var(--glass2);color:#fff;border-radius:12px" required></div><div class="row g-3 mb-3"><div class="col-6"><label class="form-label text-muted small fw-bold">Screens</label><input type="number" class="form-control" id="tScreens" min="1" style="background:var(--glass);border:1px solid var(--glass2);color:#fff;border-radius:12px" required></div><div class="col-6"><label class="form-label text-muted small fw-bold">Capacity</label><input type="number" class="form-control" id="tCapacity" min="50" style="background:var(--glass);border:1px solid var(--glass2);color:#fff;border-radius:12px" required></div></div><div class="d-flex gap-2 justify-content-end"><button type="button" class="btn btn-outline-cine" data-bs-dismiss="modal">Cancel</button><button type="submit" class="btn btn-cine"><i class="bi bi-check-lg me-2"></i>Save</button></div></form></div></div></div></div>
+<div class="modal fade" id="showModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header px-4 pt-4"><h5 class="modal-title text-white fw-bold"><i class="bi bi-calendar-event me-2 text-danger"></i>Show</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div><div class="modal-body p-4"><form id="showForm" onsubmit="return saveShow(event)"><input type="hidden" id="showEditId"><div class="mb-3"><label class="form-label text-muted small fw-bold">Movie</label><select class="form-select" id="sMovie" style="background:var(--glass);border:1px solid var(--glass2);color:#fff;border-radius:12px" required></select></div><div class="mb-3"><label class="form-label text-muted small fw-bold">Theater</label><select class="form-select" id="sTheater" style="background:var(--glass);border:1px solid var(--glass2);color:#fff;border-radius:12px" required></select></div><div class="row g-3 mb-3"><div class="col-6"><label class="form-label text-muted small fw-bold">Date</label><input type="date" class="form-control" id="sDate" style="background:var(--glass);border:1px solid var(--glass2);color:#fff;border-radius:12px" required></div><div class="col-6"><label class="form-label text-muted small fw-bold">Time</label><input type="time" class="form-control" id="sTime" style="background:var(--glass);border:1px solid var(--glass2);color:#fff;border-radius:12px" required></div></div><div class="mb-3"><label class="form-label text-muted small fw-bold">Screen</label><input type="number" class="form-control" id="sScreen" min="1" style="background:var(--glass);border:1px solid var(--glass2);color:#fff;border-radius:12px" required></div><div class="d-flex gap-2 justify-content-end"><button type="button" class="btn btn-outline-cine" data-bs-dismiss="modal">Cancel</button><button type="submit" class="btn btn-cine"><i class="bi bi-check-lg me-2"></i>Save</button></div></form></div></div></div></div>
+<div class="modal fade trailer-modal" id="trailerModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered modal-lg"><div class="modal-content"><div class="modal-header px-4 pt-4"><h5 class="modal-title text-white fw-bold"><i class="bi bi-play-circle me-2 text-danger"></i>Trailer</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" onclick="stopTrailer()"></button></div><div class="modal-body p-0"><div id="trailerContent" class="trailer-placeholder"><i class="bi bi-play-circle text-muted" style="font-size:4rem"></i></div></div></div></div></div>
+<div class="modal fade" id="reviewModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header px-4 pt-4"><h5 class="modal-title text-white fw-bold"><i class="bi bi-chat-dots me-2 text-danger"></i>Review</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div><div class="modal-body p-4"><form onsubmit="return submitReview(event)"><input type="hidden" id="reviewMovieId"><div class="mb-3"><label class="form-label text-muted small fw-bold">Rating</label><div class="stars fs-3" id="reviewStars"><i class="bi bi-star" data-val="1" onclick="setRating(1)"></i><i class="bi bi-star" data-val="2" onclick="setRating(2)"></i><i class="bi bi-star" data-val="3" onclick="setRating(3)"></i><i class="bi bi-star" data-val="4" onclick="setRating(4)"></i><i class="bi bi-star" data-val="5" onclick="setRating(5)"></i></div></div><div class="mb-3"><textarea class="form-control" id="reviewText" rows="4" placeholder="Share your thoughts..." style="background:var(--glass);border:1px solid var(--glass2);color:#fff;border-radius:12px" required></textarea></div><button type="submit" class="btn btn-cine w-100"><i class="bi bi-send me-2"></i>Submit</button></form></div></div></div></div>
+<div class="modal fade" id="userDetailModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered modal-lg"><div class="modal-content"><div class="modal-header px-4 pt-4"><h5 class="modal-title text-white fw-bold"><i class="bi bi-person-lines-fill me-2 text-danger"></i>User Details</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div><div class="modal-body p-4" id="userDetailBody"></div></div></div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// ===== DATA =====
+const DEFAULT_MOVIES=[
+{id:1,title:"The Dark Knight Rises",genre:"Action",rating:9.0,duration:"2h 44m",language:"English",release:"2024-07-20",director:"Christopher Nolan",cast:["Christian Bale","Tom Hardy","Anne Hathaway"],poster:"https://images.pexels.com/photos/3709370/pexels-photo-3709370.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=600&w=400",description:"Eight years after the Joker's reign, Batman must return to defend Gotham against the cunning Bane.",trailer:"https://www.youtube.com/embed/g8evyE9TuYk",featured:true},
+{id:2,title:"Interstellar",genre:"Sci-Fi",rating:8.7,duration:"2h 49m",language:"English",release:"2024-11-07",director:"Christopher Nolan",cast:["Matthew McConaughey","Anne Hathaway"],poster:"https://images.pexels.com/photos/1790556/pexels-photo-1790556.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=600&w=400",description:"Explorers travel through a wormhole to save humanity from environmental collapse.",trailer:"https://www.youtube.com/embed/zSWdZVtXT7E",featured:true},
+{id:3,title:"Inception",genre:"Sci-Fi",rating:8.8,duration:"2h 28m",language:"English",release:"2024-07-16",director:"Christopher Nolan",cast:["Leonardo DiCaprio","Joseph Gordon-Levitt"],poster:"https://images.pexels.com/photos/7991491/pexels-photo-7991491.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=600&w=400",description:"A thief who steals secrets through dream-sharing is given the task of planting an idea.",trailer:"https://www.youtube.com/embed/YoHD9XEInc0",featured:true},
+{id:4,title:"Avengers: Endgame",genre:"Action",rating:8.4,duration:"3h 1m",language:"English",release:"2024-04-26",director:"Anthony Russo",cast:["Robert Downey Jr.","Chris Evans"],poster:"https://images.pexels.com/photos/7991171/pexels-photo-7991171.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=600&w=400",description:"The Avengers assemble once more to reverse Thanos' actions and restore the universe.",trailer:"https://www.youtube.com/embed/TcMBFSGVi1c",featured:false},
+{id:5,title:"Parasite",genre:"Thriller",rating:8.5,duration:"2h 12m",language:"Korean",release:"2024-05-30",director:"Bong Joon-ho",cast:["Song Kang-ho","Lee Sun-kyun"],poster:"https://images.pexels.com/photos/31593645/pexels-photo-31593645.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=600&w=400",description:"Greed and class discrimination threaten a symbiotic relationship between two families.",trailer:"https://www.youtube.com/embed/5xH0HfJHsaY",featured:true},
+{id:6,title:"Spider-Man: No Way Home",genre:"Action",rating:8.3,duration:"2h 28m",language:"English",release:"2024-12-17",director:"Jon Watts",cast:["Tom Holland","Zendaya"],poster:"https://images.pexels.com/photos/8263369/pexels-photo-8263369.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=600&w=400",description:"When a spell goes wrong, dangerous villains from other worlds start appearing.",trailer:"https://www.youtube.com/embed/JfVOs4VSpmA",featured:false},
+{id:7,title:"Dune: Part Two",genre:"Sci-Fi",rating:8.9,duration:"2h 46m",language:"English",release:"2024-03-01",director:"Denis Villeneuve",cast:["Timothée Chalamet","Zendaya"],poster:"https://images.pexels.com/photos/7991320/pexels-photo-7991320.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=600&w=400",description:"Paul Atreides unites with the Fremen on a warpath of revenge.",trailer:"https://www.youtube.com/embed/Way9Dexny3w",featured:true},
+{id:8,title:"Oppenheimer",genre:"Drama",rating:9.1,duration:"3h 0m",language:"English",release:"2024-07-21",director:"Christopher Nolan",cast:["Cillian Murphy","Emily Blunt"],poster:"https://images.pexels.com/photos/7991501/pexels-photo-7991501.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=600&w=400",description:"The story of J. Robert Oppenheimer and the development of the atomic bomb.",trailer:"https://www.youtube.com/embed/uYPbbksJxIg",featured:true},
+{id:9,title:"The Batman",genre:"Action",rating:7.8,duration:"2h 56m",language:"English",release:"2024-03-04",director:"Matt Reeves",cast:["Robert Pattinson","Zoë Kravitz"],poster:"https://images.pexels.com/photos/8272145/pexels-photo-8272145.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=600&w=400",description:"Batman investigates corruption in Gotham when a serial killer targets political figures.",trailer:"https://www.youtube.com/embed/mqqft2x_Aa4",featured:false},
+{id:10,title:"Everything Everywhere",genre:"Comedy",rating:8.0,duration:"2h 19m",language:"English",release:"2024-03-25",director:"Daniel Kwan",cast:["Michelle Yeoh","Ke Huy Quan"],poster:"https://images.pexels.com/photos/7991486/pexels-photo-7991486.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=600&w=400",description:"An immigrant is swept up in an adventure to save the multiverse.",trailer:"https://www.youtube.com/embed/wxN1T1qdQ-I",featured:false},
+{id:11,title:"Joker",genre:"Drama",rating:8.4,duration:"2h 2m",language:"English",release:"2024-10-04",director:"Todd Phillips",cast:["Joaquin Phoenix","Robert De Niro"],poster:"https://images.pexels.com/photos/8272144/pexels-photo-8272144.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=600&w=400",description:"Mentally-troubled comedian Arthur Fleck embarks on a downward spiral of crime.",trailer:"https://www.youtube.com/embed/zAGVQLHvwOY",featured:false},
+{id:12,title:"Avatar: Way of Water",genre:"Sci-Fi",rating:7.6,duration:"3h 12m",language:"English",release:"2024-12-16",director:"James Cameron",cast:["Sam Worthington","Zoe Saldana"],poster:"https://images.pexels.com/photos/18604676/pexels-photo-18604676.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=600&w=400",description:"Jake Sully must protect his family when a familiar threat returns to Pandora.",trailer:"https://www.youtube.com/embed/d9MyW72ELq0",featured:false}
+];
+const DEFAULT_THEATERS=[{id:1,name:"CineVerse IMAX",location:"Downtown Central",screens:8,capacity:1200,status:"Active"},{id:2,name:"CineVerse Gold",location:"Mall of India",screens:6,capacity:900,status:"Active"},{id:3,name:"CineVerse Multiplex",location:"City Center",screens:10,capacity:1500,status:"Active"},{id:4,name:"CineVerse Luxe",location:"South Hills",screens:4,capacity:600,status:"Active"}];
+const DEFAULT_SHOWS=[{id:1,movieId:1,theaterId:1,date:"2025-02-15",time:"10:00",screen:1},{id:2,movieId:1,theaterId:1,date:"2025-02-15",time:"14:30",screen:2},{id:3,movieId:2,theaterId:2,date:"2025-02-15",time:"11:00",screen:1},{id:4,movieId:3,theaterId:1,date:"2025-02-16",time:"16:00",screen:3},{id:5,movieId:8,theaterId:3,date:"2025-02-16",time:"19:00",screen:1},{id:6,movieId:5,theaterId:2,date:"2025-02-17",time:"13:00",screen:2}];
+const DEFAULT_REVIEWS=[{id:1,movieId:1,userId:"admin@cineverse.com",userName:"Admin Master",rating:5,text:"Absolutely phenomenal! A masterpiece of cinema.",date:"2025-01-20"},{id:2,movieId:2,userId:"admin@cineverse.com",userName:"Admin Master",rating:5,text:"Mind-bending and emotionally powerful.",date:"2025-01-18"},{id:3,movieId:8,userId:"admin@cineverse.com",userName:"Admin Master",rating:5,text:"Oscar-worthy performance by Cillian Murphy.",date:"2025-01-22"}];
+
+let state={currentPage:'home',currentUser:null,selectedMovie:null,selectedSeats:[],selectedDate:null,selectedTime:null,reviewRating:0};
+
+function ls(k,v){if(v===undefined){const x=localStorage.getItem('cv_'+k);return x?JSON.parse(x):null}localStorage.setItem('cv_'+k,JSON.stringify(v))}
+
+function initData(){
+  if(!ls('movies'))ls('movies',DEFAULT_MOVIES);if(!ls('theaters'))ls('theaters',DEFAULT_THEATERS);
+  if(!ls('shows'))ls('shows',DEFAULT_SHOWS);if(!ls('reviews'))ls('reviews',DEFAULT_REVIEWS);
+  if(!ls('bookings'))ls('bookings',[]);
+  if(!ls('users'))ls('users',[{email:"admin@cineverse.com",password:"admin123",firstName:"Admin",lastName:"Master",phone:"9999999999",role:"admin",registered:"2025-01-01"},{email:"john@example.com",password:"john123",firstName:"John",lastName:"Doe",phone:"1234567890",role:"user",registered:"2025-01-10"},{email:"sarah@example.com",password:"sarah123",firstName:"Sarah",lastName:"Smith",phone:"0987654321",role:"user",registered:"2025-01-15"}]);
+  const u=ls('currentUser');if(u){state.currentUser=u;updateAuthUI()}
+}
+
+function showToast(t,b,type='success'){const el=document.getElementById('appToast');document.getElementById('toastIcon').className=type==='success'?'bi bi-check-circle-fill text-success me-2':type==='error'?'bi bi-x-circle-fill text-danger me-2':'bi bi-info-circle-fill text-info me-2';document.getElementById('toastTitle').textContent=t;document.getElementById('toastBody').textContent=b;bootstrap.Toast.getOrCreateInstance(el).show()}
+
+// PARTICLES
+function createParticles(containerId,count=30){const c=document.getElementById(containerId);if(!c)return;let h='';for(let i=0;i<count;i++){const x=Math.random()*100,d=Math.random()*15+8,del=Math.random()*10,s=Math.random()*3+1,o=Math.random()*.4+.1;h+=`<div class="particle" style="left:${x}%;width:${s}px;height:${s}px;animation-duration:${d}s;animation-delay:${del}s;bottom:-10px;opacity:${o}"></div>`}c.innerHTML=h}
+
+// NAV
+function navigateTo(p,d){document.querySelectorAll('.page-section').forEach(s=>s.classList.remove('active'));const t=document.getElementById('page-'+p);if(t)t.classList.add('active');document.querySelectorAll('.nav-link[data-page]').forEach(l=>l.classList.remove('active'));const nl=document.querySelector(`.nav-link[data-page="${p}"]`);if(nl)nl.classList.add('active');document.getElementById('mainNavbar').style.display=p==='admin'?'none':'';state.currentPage=p;window.scrollTo({top:0,behavior:'smooth'});const nc=document.getElementById('navContent');if(nc.classList.contains('show'))bootstrap.Collapse.getOrCreateInstance(nc).hide();
+switch(p){case'home':renderHomeMovies();break;case'movies':renderAllMovies();break;case'featured':renderFeatured();break;case'movie-details':renderMovieDetails(d);break;case'booking':initBooking(d);break;case'admin':if(!state.currentUser||state.currentUser.role!=='admin'){showToast('Access Denied','Admin login required.','error');navigateTo('login');return}renderAdminDashboard();break}}
+
+// AUTH
+function handleLogin(e){e.preventDefault();const em=document.getElementById('loginEmail').value.trim(),pw=document.getElementById('loginPassword').value;const u=(ls('users')||[]).find(u=>u.email===em&&u.password===pw);if(!u){showToast('Login Failed','Invalid email or password.','error');return false}state.currentUser=u;ls('currentUser',u);updateAuthUI();showToast('Welcome!','Hello, '+u.firstName+'!','success');navigateTo('home');return false}
+function handleRegister(e){e.preventDefault();const fn=document.getElementById('regFirstName').value.trim(),ln=document.getElementById('regLastName').value.trim(),em=document.getElementById('regEmail').value.trim(),ph=document.getElementById('regPhone').value.trim(),pw=document.getElementById('regPassword').value,cpw=document.getElementById('regConfirmPassword').value;if(pw!==cpw){showToast('Error','Passwords do not match!','error');return false}if(pw.length<6){showToast('Error','Password min 6 characters!','error');return false}const us=ls('users')||[];if(us.find(u=>u.email===em)){showToast('Error','Email already registered!','error');return false}const nu={email:em,password:pw,firstName:fn,lastName:ln,phone:ph,role:'user',registered:new Date().toISOString().split('T')[0]};us.push(nu);ls('users',us);state.currentUser=nu;ls('currentUser',nu);updateAuthUI();showToast('Account Created!','Welcome to CineVerse!','success');document.getElementById('registerForm').reset();navigateTo('home');return false}
+function logout(){state.currentUser=null;localStorage.removeItem('cv_currentUser');updateAuthUI();showToast('Logged Out','See you soon!','info');navigateTo('home')}
+function updateAuthUI(){const a=document.getElementById('navAuth'),u=document.getElementById('navUser'),ab=document.getElementById('adminDashBtn'),ns=document.getElementById('navUserName');if(state.currentUser){a.classList.add('d-none');u.classList.remove('d-none');ns.innerHTML='<i class="bi bi-person-circle me-1"></i>'+state.currentUser.firstName;ab.style.display=state.currentUser.role==='admin'?'':'none'}else{a.classList.remove('d-none');u.classList.add('d-none')}}
+
+// MOVIES
+function movieCardHTML(m){return`<div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 movie-item" data-genre="${m.genre}" data-title="${m.title.toLowerCase()}"><div class="movie-card" onclick="navigateTo('movie-details',${m.id})"><div class="movie-card-img"><img src="${m.poster}" alt="${m.title}" loading="lazy"><div class="movie-rating"><i class="bi bi-star-fill me-1"></i>${m.rating}</div><div class="movie-card-overlay"><div class="d-flex gap-2"><button class="btn btn-cine btn-sm" onclick="event.stopPropagation();navigateTo('movie-details',${m.id})"><i class="bi bi-info-circle me-1"></i>Details</button><button class="btn btn-outline-cine btn-sm" onclick="event.stopPropagation();navigateTo('booking',${m.id})"><i class="bi bi-ticket-perforated me-1"></i>Book</button></div></div></div><div class="movie-card-body"><h5>${m.title}</h5><span class="movie-genre"><span class="badge-cine me-1">${m.genre}</span></span><div class="movie-meta"><span><i class="bi bi-clock me-1"></i>${m.duration}</span><span><i class="bi bi-translate me-1"></i>${m.language}</span></div></div></div></div>`}
+function renderHomeMovies(){document.getElementById('homeMovieGrid').innerHTML=(ls('movies')||[]).slice(0,8).map(m=>movieCardHTML(m)).join('')}
+function renderAllMovies(){document.getElementById('allMovieGrid').innerHTML=(ls('movies')||[]).map(m=>movieCardHTML(m)).join('')}
+function filterMovies(){const s=document.getElementById('movieSearch').value.toLowerCase(),g=document.getElementById('genreFilter').value;document.querySelectorAll('#allMovieGrid .movie-item').forEach(c=>{c.style.display=c.dataset.title.includes(s)&&(!g||c.dataset.genre===g)?'':'none'})}
+
+// DETAILS
+function renderMovieDetails(id){const ms=ls('movies')||[],m=ms.find(x=>x.id===id);if(!m)return;state.selectedMovie=m;const rv=(ls('reviews')||[]).filter(r=>r.movieId===id),avg=rv.length?(rv.reduce((a,r)=>a+r.rating,0)/rv.length).toFixed(1):m.rating;
+document.getElementById('movieDetailContent').innerHTML=`<div style="position:relative;min-height:520px"><div style="position:absolute;inset:0;background:url('${m.poster}') center/cover;filter:blur(30px) brightness(.25)"></div><div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(5,5,5,.6),var(--dark))"></div><div class="container position-relative" style="padding-top:120px;padding-bottom:3rem"><div class="row g-5"><div class="col-md-4 col-lg-3"><img src="${m.poster}" class="w-100 rounded-4" style="box-shadow:0 30px 60px rgba(0,0,0,.6);border:2px solid rgba(255,255,255,.08)" alt=""></div><div class="col-md-8 col-lg-9"><h1 class="fw-bold text-white mb-2">${m.title}</h1><div class="d-flex gap-2 flex-wrap mb-3"><span class="badge-cine">${m.genre}</span><span class="badge" style="background:var(--glass2)">${m.language}</span><span class="badge" style="background:var(--glass2)"><i class="bi bi-clock me-1"></i>${m.duration}</span></div><div class="d-flex align-items-center gap-3 mb-3"><i class="bi bi-star-fill text-warning"></i><span class="fw-bold text-white fs-5">${avg}</span><span class="text-muted">/10 (${rv.length} reviews)</span></div><p class="text-muted lh-lg">${m.description}</p><p class="text-muted mb-1"><strong class="text-white">Director:</strong> ${m.director}</p><p class="text-muted mb-4"><strong class="text-white">Cast:</strong> ${m.cast.join(', ')}</p><div class="d-flex gap-3 flex-wrap"><button class="btn btn-cine btn-lg" onclick="navigateTo('booking',${m.id})"><i class="bi bi-ticket-perforated me-2"></i>Book</button><button class="btn btn-outline-cine btn-lg" onclick="playTrailer('${m.trailer||''}')"><i class="bi bi-play-circle me-2"></i>Trailer</button><button class="btn btn-outline-cine btn-lg" onclick="openReviewModal(${m.id})"><i class="bi bi-chat-dots me-2"></i>Review</button></div></div></div></div></div><div class="container section-padding" style="padding-top:2rem"><h4 class="fw-bold text-white mb-4"><i class="bi bi-chat-dots me-2 text-danger"></i>Reviews</h4>${rv.length?rv.map(r=>`<div class="review-card"><div class="d-flex justify-content-between mb-2"><div><h6 class="fw-bold text-white mb-0">${r.userName}</h6><small class="text-muted">${r.date}</small></div><div class="stars">${'<i class="bi bi-star-fill"></i>'.repeat(r.rating)}${'<i class="bi bi-star"></i>'.repeat(5-r.rating)}</div></div><p class="text-muted mb-0">${r.text}</p></div>`).join(''):'<p class="text-muted">No reviews yet.</p>'}</div>`}
+
+function playTrailer(u){const c=document.getElementById('trailerContent');c.innerHTML=u&&u.includes('youtube')?`<iframe width="100%" style="aspect-ratio:16/9;border:0;border-radius:0 0 24px 24px" src="${u}?autoplay=1" allowfullscreen allow="autoplay"></iframe>`:'<div class="text-center py-5"><i class="bi bi-camera-video-off text-muted" style="font-size:4rem"></i><p class="text-muted mt-3">Not available</p></div>';new bootstrap.Modal(document.getElementById('trailerModal')).show()}
+function stopTrailer(){document.getElementById('trailerContent').innerHTML='<div class="trailer-placeholder"><i class="bi bi-play-circle text-muted" style="font-size:4rem"></i></div>'}
+
+// REVIEWS
+function openReviewModal(id){if(!state.currentUser){showToast('Login Required','Please login first.','error');navigateTo('login');return}document.getElementById('reviewMovieId').value=id;state.reviewRating=0;document.querySelectorAll('#reviewStars i').forEach(i=>i.className='bi bi-star');document.getElementById('reviewText').value='';new bootstrap.Modal(document.getElementById('reviewModal')).show()}
+function setRating(v){state.reviewRating=v;document.querySelectorAll('#reviewStars i').forEach(i=>{i.className=parseInt(i.dataset.val)<=v?'bi bi-star-fill':'bi bi-star'})}
+function submitReview(e){e.preventDefault();if(!state.reviewRating){showToast('Error','Select a rating.','error');return false}const rv=ls('reviews')||[],mid=parseInt(document.getElementById('reviewMovieId').value);rv.push({id:Date.now(),movieId:mid,userId:state.currentUser.email,userName:state.currentUser.firstName+' '+state.currentUser.lastName,rating:state.reviewRating,text:document.getElementById('reviewText').value,date:new Date().toISOString().split('T')[0]});ls('reviews',rv);bootstrap.Modal.getInstance(document.getElementById('reviewModal')).hide();showToast('Submitted!','Thanks for your review!','success');renderMovieDetails(mid);return false}
+
+// FEATURED
+function renderFeatured(){const ms=(ls('movies')||[]).filter(m=>m.featured);if(!ms.length)return;const h=ms[0];document.getElementById('featuredHero').innerHTML=`<img src="${h.poster}" alt="${h.title}"><div class="featured-big-overlay"><div style="max-width:500px"><span class="badge-cine mb-3 d-inline-block"><i class="bi bi-star-fill me-1"></i>Editor's Pick</span><h2 class="fw-bold text-white mb-2">${h.title}</h2><div class="d-flex gap-2 mb-3"><span class="badge" style="background:var(--glass2)">${h.genre}</span><span class="badge" style="background:var(--glass2)"><i class="bi bi-star-fill text-warning me-1"></i>${h.rating}</span><span class="badge" style="background:var(--glass2)">${h.duration}</span></div><p class="text-muted mb-3">${h.description}</p><div class="d-flex gap-2"><button class="btn btn-cine" onclick="navigateTo('booking',${h.id})"><i class="bi bi-ticket-perforated me-2"></i>Book</button><button class="btn btn-outline-cine" onclick="navigateTo('movie-details',${h.id})"><i class="bi bi-info-circle me-2"></i>Details</button></div></div></div>`;document.getElementById('featuredGrid').innerHTML=ms.slice(1).map(m=>movieCardHTML(m)).join('')}
+
+// BOOKING
+function initBooking(id){if(!state.currentUser){showToast('Login Required','Please login.','error');navigateTo('login');return}const ms=ls('movies')||[],m=ms.find(x=>x.id===id);if(!m)return;state.selectedMovie=m;state.selectedSeats=[];state.selectedDate=null;state.selectedTime=null;document.getElementById('bookingMovieTitle').innerHTML=`<i class="bi bi-film me-2"></i>${m.title} — ${m.genre} | ${m.duration}`;const dd=document.getElementById('showDates');let dh='';for(let i=0;i<7;i++){const d=new Date();d.setDate(d.getDate()+i);const ds=d.toISOString().split('T')[0];dh+=`<button class="btn ${i===0?'btn-cine':'btn-outline-cine'} btn-sm date-btn" data-date="${ds}" onclick="selectDate(this,'${ds}')" style="min-width:70px"><div class="small">${d.toLocaleDateString('en-US',{weekday:'short'})}</div><div class="fw-bold">${d.getDate()}</div><div class="small">${d.toLocaleDateString('en-US',{month:'short'})}</div></button>`}dd.innerHTML=dh;const ts=['10:00 AM','01:00 PM','04:00 PM','07:00 PM','10:00 PM'];document.getElementById('showTimes').innerHTML=ts.map((t,i)=>`<button class="btn ${i===0?'btn-cine':'btn-outline-cine'} btn-sm time-btn" onclick="selectTime(this,'${t}')">${t}</button>`).join('');state.selectedDate=dd.querySelector('.date-btn')?.dataset.date;state.selectedTime=ts[0];generateSeatMap();updateSummary()}
+function selectDate(b,d){document.querySelectorAll('.date-btn').forEach(x=>{x.classList.remove('btn-cine');x.classList.add('btn-outline-cine')});b.classList.remove('btn-outline-cine');b.classList.add('btn-cine');state.selectedDate=d;state.selectedSeats=[];generateSeatMap();updateSummary()}
+function selectTime(b,t){document.querySelectorAll('.time-btn').forEach(x=>{x.classList.remove('btn-cine');x.classList.add('btn-outline-cine')});b.classList.remove('btn-outline-cine');b.classList.add('btn-cine');state.selectedTime=t;state.selectedSeats=[];generateSeatMap();updateSummary()}
+function generateSeatMap(){const sm=document.getElementById('seatMap'),rows=[{l:'A',t:'box',c:8},{l:'B',t:'box',c:8},{l:'C',t:'platinum',c:10},{l:'D',t:'platinum',c:10},{l:'E',t:'platinum',c:10},{l:'F',t:'gold',c:12},{l:'G',t:'gold',c:12},{l:'H',t:'gold',c:12}];const oc=new Set();for(let i=0;i<20;i++){const r=rows[Math.floor(Math.random()*rows.length)];oc.add(r.l+(Math.floor(Math.random()*r.c)+1))}let h='';rows.forEach(r=>{h+=`<div class="seat-row"><span class="seat-row-label">${r.l}</span>`;for(let i=1;i<=r.c;i++){const sid=r.l+i,isO=oc.has(sid),isS=state.selectedSeats.find(s=>s.id===sid);h+=`<div class="seat ${r.t} ${isO?'occupied':''} ${isS?'selected':''}" onclick="${isO?'':`toggleSeat('${sid}','${r.t}')`}" title="${sid}">${i}</div>`}h+=`<span class="seat-row-label">${r.l}</span></div>`});sm.innerHTML=h}
+function toggleSeat(id,t){const i=state.selectedSeats.findIndex(s=>s.id===id);if(i>-1)state.selectedSeats.splice(i,1);else{if(state.selectedSeats.length>=10){showToast('Limit','Max 10 seats.','error');return}state.selectedSeats.push({id,type:t})}document.querySelectorAll('.seat').forEach(s=>{const sid=s.getAttribute('title');if(sid){state.selectedSeats.find(ss=>ss.id===sid)?s.classList.add('selected'):s.classList.remove('selected')}});updateSummary()}
+function updateSummary(){const c=document.getElementById('summaryContent'),btn=document.getElementById('confirmBookingBtn');if(!state.selectedSeats.length){c.innerHTML='<div class="text-center py-4 text-muted"><i class="bi bi-ticket-perforated" style="font-size:2rem"></i><p class="mt-2 mb-0">Select seats</p></div>';btn.disabled=true;return}const pr={gold:250,platinum:350,box:500},gs=state.selectedSeats.filter(s=>s.type==='gold'),ps=state.selectedSeats.filter(s=>s.type==='platinum'),bs=state.selectedSeats.filter(s=>s.type==='box');let tot=0,h=`<div class="mb-3 pb-3" style="border-bottom:1px solid var(--glass2)"><h6 class="fw-bold text-white">${state.selectedMovie?.title||''}</h6><small class="text-muted"><i class="bi bi-calendar me-1"></i>${state.selectedDate||''} | <i class="bi bi-clock ms-1 me-1"></i>${state.selectedTime||''}</small></div>`;if(gs.length){const a=gs.length*pr.gold;tot+=a;h+=`<div class="d-flex justify-content-between mb-1"><span class="text-muted">Gold (${gs.length}x ₹${pr.gold})</span><span class="text-white fw-bold">₹${a}</span></div><div class="mb-2"><small class="text-muted">${gs.map(s=>s.id).join(', ')}</small></div>`}if(ps.length){const a=ps.length*pr.platinum;tot+=a;h+=`<div class="d-flex justify-content-between mb-1"><span class="text-muted">Platinum (${ps.length}x ₹${pr.platinum})</span><span class="text-white fw-bold">₹${a}</span></div><div class="mb-2"><small class="text-muted">${ps.map(s=>s.id).join(', ')}</small></div>`}if(bs.length){const a=bs.length*pr.box;tot+=a;h+=`<div class="d-flex justify-content-between mb-1"><span class="text-muted">Box (${bs.length}x ₹${pr.box})</span><span class="text-white fw-bold">₹${a}</span></div><div class="mb-2"><small class="text-muted">${bs.map(s=>s.id).join(', ')}</small></div>`}const tx=Math.round(tot*.18),gt=tot+tx;h+=`<hr style="border-color:var(--glass2)"><div class="d-flex justify-content-between mb-1"><span class="text-muted">Subtotal</span><span class="text-white">₹${tot}</span></div><div class="d-flex justify-content-between mb-1"><span class="text-muted">GST 18%</span><span class="text-white">₹${tx}</span></div><hr style="border-color:var(--glass2)"><div class="d-flex justify-content-between"><span class="fw-bold text-white">Total</span><span class="fw-bold text-gradient fs-5">₹${gt}</span></div>`;c.innerHTML=h;btn.disabled=false}
+function confirmBooking(){if(!state.selectedSeats.length)return;const pr={gold:250,platinum:350,box:500};let tot=state.selectedSeats.reduce((a,s)=>a+pr[s.type],0);const tx=Math.round(tot*.18),gt=tot+tx,bk={id:'CV'+Date.now().toString().slice(-6),userId:state.currentUser.email,userName:state.currentUser.firstName+' '+state.currentUser.lastName,movieId:state.selectedMovie.id,movieTitle:state.selectedMovie.title,theater:'CineVerse IMAX',date:state.selectedDate,time:state.selectedTime,seats:state.selectedSeats.map(s=>({...s})),subtotal:tot,tax:tx,total:gt,status:'Confirmed',bookedAt:new Date().toISOString()};const bks=ls('bookings')||[];bks.push(bk);ls('bookings',bks);renderConfirmation(bk);navigateTo('confirmation');showToast('Confirmed!','Booking '+bk.id+' confirmed!','success')}
+function renderConfirmation(b){const sl=b.seats.map(s=>`<span class="badge me-1 mb-1 ${s.type==='gold'?'badge-gold':s.type==='platinum'?'badge-platinum':'badge-box'}">${s.id}</span>`).join('');document.getElementById('ticketCard').innerHTML=`<div class="p-4"><div class="d-flex justify-content-between align-items-start mb-3"><div><h4 class="fw-bold text-white mb-1">${b.movieTitle}</h4><span class="text-muted">${b.theater}</span></div><span class="badge-cine fs-6">${b.id}</span></div><div class="row g-3 mb-3"><div class="col-4"><small class="text-muted d-block">Date</small><strong class="text-white">${b.date}</strong></div><div class="col-4"><small class="text-muted d-block">Time</small><strong class="text-white">${b.time}</strong></div><div class="col-4"><small class="text-muted d-block">Seats</small><strong class="text-white">${b.seats.length}</strong></div></div><div class="mb-3"><small class="text-muted d-block mb-1">Seats</small>${sl}</div></div><div class="ticket-divider"></div><div class="p-4"><div class="row align-items-center"><div class="col-8"><div class="d-flex justify-content-between mb-1"><span class="text-muted">Subtotal</span><span class="text-white">₹${b.subtotal}</span></div><div class="d-flex justify-content-between mb-1"><span class="text-muted">GST</span><span class="text-white">₹${b.tax}</span></div><hr style="border-color:var(--glass2)"><div class="d-flex justify-content-between"><span class="fw-bold text-white">Total</span><span class="fw-bold text-gradient fs-4">₹${b.total}</span></div></div><div class="col-4"><div class="ticket-qr"><svg viewBox="0 0 100 100" width="80" height="80"><rect x="5" y="5" width="20" height="20" fill="#000"/><rect x="30" y="5" width="10" height="10" fill="#000"/><rect x="45" y="5" width="10" height="10" fill="#000"/><rect x="75" y="5" width="20" height="20" fill="#000"/><rect x="5" y="30" width="10" height="10" fill="#000"/><rect x="25" y="30" width="10" height="10" fill="#000"/><rect x="45" y="30" width="20" height="10" fill="#000"/><rect x="75" y="30" width="10" height="10" fill="#000"/><rect x="5" y="45" width="20" height="10" fill="#000"/><rect x="35" y="45" width="10" height="10" fill="#000"/><rect x="55" y="45" width="10" height="10" fill="#000"/><rect x="75" y="45" width="20" height="10" fill="#000"/><rect x="5" y="75" width="20" height="20" fill="#000"/><rect x="30" y="75" width="10" height="10" fill="#000"/><rect x="50" y="75" width="10" height="10" fill="#000"/><rect x="75" y="75" width="20" height="20" fill="#000"/></svg></div></div></div><div class="text-center mt-3"><small class="text-muted">Booked by: ${b.userName}</small></div></div>`}
+
+function handleContact(e){e.preventDefault();showToast('Sent!','We will reply shortly.','success');e.target.reset();return false}
+
+// ADMIN
+function showAdminTab(tab){document.querySelectorAll('.admin-tab').forEach(t=>t.style.display='none');document.querySelectorAll('.admin-sidebar .nav-link').forEach(l=>l.classList.remove('active'));const t=document.getElementById('tab-'+tab);if(t)t.style.display='block';event.target.closest('.nav-link').classList.add('active');document.getElementById('adminSidebar').classList.remove('show');switch(tab){case'dashboard':renderAdminDashboard();break;case'a-movies':renderAdminMovies();break;case'a-theaters':renderAdminTheaters();break;case'a-shows':renderAdminShows();break;case'a-users':renderAdminUsers();break;case'a-bookings':renderAdminBookings();break;case'a-reviews':renderAdminReviews();break}}
+function renderAdminDashboard(){const ms=ls('movies')||[],us=ls('users')||[],bks=ls('bookings')||[],rv=bks.reduce((a,b)=>a+b.total,0);document.getElementById('statMovies').textContent=ms.length;document.getElementById('statUsers').textContent=us.length;document.getElementById('statBookings').textContent=bks.length;document.getElementById('statRevenue').textContent='₹'+rv.toLocaleString();document.getElementById('recentBookingsTable').innerHTML=bks.slice(-5).reverse().map(b=>`<tr><td><span class="badge-cine">${b.id}</span></td><td>${b.userName}</td><td>${b.movieTitle}</td><td>${b.seats.length}</td><td class="fw-bold">₹${b.total}</td><td>${b.date}</td><td><span class="badge bg-success">Confirmed</span></td></tr>`).join('')||'<tr><td colspan="7" class="text-center text-muted py-4">No bookings</td></tr>';const gn={};ms.forEach(m=>{gn[m.genre]=(gn[m.genre]||0)+1});const mx=Math.max(...Object.values(gn),1);document.getElementById('genreChart').innerHTML=Object.entries(gn).map(([g,c])=>`<div class="d-flex align-items-center gap-2 mb-2"><span class="text-muted small" style="width:70px">${g}</span><div class="flex-grow-1" style="height:22px;background:var(--glass);border-radius:6px;overflow:hidden"><div style="width:${(c/mx)*100}%;height:100%;background:var(--gradient1);border-radius:6px;transition:width 1s"></div></div><span class="text-white fw-bold small" style="width:20px">${c}</span></div>`).join('');const days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],vals=days.map(()=>Math.floor(Math.random()*20+5)),maxV=Math.max(...vals);document.getElementById('weekChart').innerHTML=`<div class="d-flex align-items-end justify-content-between gap-2" style="height:150px">${vals.map((v,i)=>`<div class="text-center flex-grow-1"><div style="height:${(v/maxV)*120}px;background:var(--gradient3);border-radius:8px 8px 0 0;transition:height 1s" class="mb-1"></div><small class="text-muted">${days[i]}</small><div class="small text-white fw-bold">${v}</div></div>`).join('')}</div>`;renderAdminMovies();renderAdminTheaters();renderAdminShows();renderAdminUsers();renderAdminBookings();renderAdminReviews()}
+function renderAdminMovies(){document.getElementById('adminMoviesTable').innerHTML=(ls('movies')||[]).map(m=>`<tr><td><img src="${m.poster}" width="45" height="60" style="object-fit:cover;border-radius:8px" alt=""></td><td class="fw-bold text-white">${m.title}</td><td><span class="badge-cine">${m.genre}</span></td><td><i class="bi bi-star-fill text-warning me-1"></i>${m.rating}</td><td>${m.duration}</td><td><button class="btn btn-sm btn-outline-cine me-1" onclick="editMovie(${m.id})"><i class="bi bi-pencil"></i></button><button class="btn btn-sm" style="border:1px solid #dc3545;color:#dc3545" onclick="deleteMovie(${m.id})"><i class="bi bi-trash"></i></button></td></tr>`).join('')}
+function openMovieModal(m){document.getElementById('movieModalTitle').innerHTML=m?'<i class="bi bi-camera-reels me-2 text-danger"></i>Edit Movie':'<i class="bi bi-camera-reels me-2 text-danger"></i>Add Movie';document.getElementById('movieEditId').value=m?m.id:'';document.getElementById('mTitle').value=m?m.title:'';document.getElementById('mGenre').value=m?m.genre:'';document.getElementById('mRating').value=m?m.rating:'';document.getElementById('mDuration').value=m?m.duration:'';document.getElementById('mLanguage').value=m?m.language:'';document.getElementById('mRelease').value=m?m.release:'';document.getElementById('mDirector').value=m?m.director:'';document.getElementById('mCast').value=m?m.cast.join(', '):'';document.getElementById('mPoster').value=m?m.poster:'';document.getElementById('mDesc').value=m?m.description:'';document.getElementById('mTrailer').value=m?(m.trailer||''):'';new bootstrap.Modal(document.getElementById('movieModal')).show()}
+function saveMovie(e){e.preventDefault();const ms=ls('movies')||[],eid=document.getElementById('movieEditId').value,d={title:document.getElementById('mTitle').value,genre:document.getElementById('mGenre').value,rating:parseFloat(document.getElementById('mRating').value),duration:document.getElementById('mDuration').value,language:document.getElementById('mLanguage').value,release:document.getElementById('mRelease').value,director:document.getElementById('mDirector').value,cast:document.getElementById('mCast').value.split(',').map(c=>c.trim()),poster:document.getElementById('mPoster').value,description:document.getElementById('mDesc').value,trailer:document.getElementById('mTrailer').value,featured:false};if(eid){const i=ms.findIndex(m=>m.id===parseInt(eid));if(i>-1){d.id=parseInt(eid);d.featured=ms[i].featured;ms[i]=d}}else{d.id=Date.now();ms.push(d)}ls('movies',ms);bootstrap.Modal.getInstance(document.getElementById('movieModal')).hide();showToast('Saved!',eid?'Movie updated.':'Movie added.','success');renderAdminMovies();return false}
+function editMovie(id){const m=(ls('movies')||[]).find(x=>x.id===id);if(m)openMovieModal(m)}
+function deleteMovie(id){if(!confirm('Delete this movie?'))return;ls('movies',(ls('movies')||[]).filter(m=>m.id!==id));showToast('Deleted','Movie removed.','info');renderAdminMovies()}
+function renderAdminTheaters(){document.getElementById('adminTheatersTable').innerHTML=(ls('theaters')||[]).map((t,i)=>`<tr><td>${i+1}</td><td class="fw-bold text-white">${t.name}</td><td>${t.location}</td><td>${t.screens}</td><td>${t.capacity}</td><td><span class="badge bg-success">${t.status}</span></td><td><button class="btn btn-sm btn-outline-cine me-1" onclick="editTheater(${t.id})"><i class="bi bi-pencil"></i></button><button class="btn btn-sm" style="border:1px solid #dc3545;color:#dc3545" onclick="deleteTheater(${t.id})"><i class="bi bi-trash"></i></button></td></tr>`).join('')}
+function openTheaterModal(t){document.getElementById('theaterEditId').value=t?t.id:'';document.getElementById('tName').value=t?t.name:'';document.getElementById('tLocation').value=t?t.location:'';document.getElementById('tScreens').value=t?t.screens:'';document.getElementById('tCapacity').value=t?t.capacity:'';new bootstrap.Modal(document.getElementById('theaterModal')).show()}
+function saveTheater(e){e.preventDefault();const ts=ls('theaters')||[],eid=document.getElementById('theaterEditId').value,d={name:document.getElementById('tName').value,location:document.getElementById('tLocation').value,screens:parseInt(document.getElementById('tScreens').value),capacity:parseInt(document.getElementById('tCapacity').value),status:'Active'};if(eid){const i=ts.findIndex(t=>t.id===parseInt(eid));if(i>-1){d.id=parseInt(eid);ts[i]=d}}else{d.id=Date.now();ts.push(d)}ls('theaters',ts);bootstrap.Modal.getInstance(document.getElementById('theaterModal')).hide();showToast('Saved!','Theater saved.','success');renderAdminTheaters();return false}
+function editTheater(id){const t=(ls('theaters')||[]).find(x=>x.id===id);if(t)openTheaterModal(t)}
+function deleteTheater(id){if(!confirm('Delete?'))return;ls('theaters',(ls('theaters')||[]).filter(t=>t.id!==id));showToast('Deleted','Removed.','info');renderAdminTheaters()}
+function renderAdminShows(){const ss=ls('shows')||[],ms=ls('movies')||[],ts=ls('theaters')||[];document.getElementById('sMovie').innerHTML='<option value="">Select</option>'+ms.map(m=>`<option value="${m.id}">${m.title}</option>`).join('');document.getElementById('sTheater').innerHTML='<option value="">Select</option>'+ts.map(t=>`<option value="${t.id}">${t.name}</option>`).join('');document.getElementById('adminShowsTable').innerHTML=ss.map((s,i)=>{const m=ms.find(x=>x.id===s.movieId),t=ts.find(x=>x.id===s.theaterId);return`<tr><td>${i+1}</td><td class="fw-bold text-white">${m?.title||'N/A'}</td><td>${t?.name||'N/A'}</td><td>${s.date}</td><td>${s.time}</td><td>Screen ${s.screen}</td><td><button class="btn btn-sm" style="border:1px solid #dc3545;color:#dc3545" onclick="deleteShow(${s.id})"><i class="bi bi-trash"></i></button></td></tr>`}).join('')}
+function openShowModal(){new bootstrap.Modal(document.getElementById('showModal')).show()}
+function saveShow(e){e.preventDefault();const ss=ls('shows')||[];ss.push({id:Date.now(),movieId:parseInt(document.getElementById('sMovie').value),theaterId:parseInt(document.getElementById('sTheater').value),date:document.getElementById('sDate').value,time:document.getElementById('sTime').value,screen:parseInt(document.getElementById('sScreen').value)});ls('shows',ss);bootstrap.Modal.getInstance(document.getElementById('showModal')).hide();showToast('Saved!','Show added.','success');renderAdminShows();return false}
+function deleteShow(id){if(!confirm('Delete?'))return;ls('shows',(ls('shows')||[]).filter(s=>s.id!==id));showToast('Deleted','Removed.','info');renderAdminShows()}
+function renderAdminUsers(){const us=ls('users')||[],bks=ls('bookings')||[];document.getElementById('adminUsersTable').innerHTML=us.map((u,i)=>{const ub=bks.filter(b=>b.userId===u.email);return`<tr><td>${i+1}</td><td class="fw-bold text-white">${u.firstName} ${u.lastName}</td><td>${u.email}</td><td>${u.phone}</td><td><span class="badge ${u.role==='admin'?'bg-danger':'bg-info'}">${u.role}</span></td><td>${u.registered}</td><td><span class="badge bg-secondary">${ub.length}</span></td><td><button class="btn btn-sm btn-outline-cine" onclick="viewUserDetail('${u.email}')"><i class="bi bi-eye"></i></button>${u.role!=='admin'?` <button class="btn btn-sm ms-1" style="border:1px solid #dc3545;color:#dc3545" onclick="deleteUser('${u.email}')"><i class="bi bi-trash"></i></button>`:''}</td></tr>`}).join('')}
+function viewUserDetail(em){const u=(ls('users')||[]).find(x=>x.email===em);if(!u)return;const bks=(ls('bookings')||[]).filter(b=>b.userId===em),rvs=(ls('reviews')||[]).filter(r=>r.userId===em),ts=bks.reduce((a,b)=>a+b.total,0);document.getElementById('userDetailBody').innerHTML=`<div class="row g-4"><div class="col-md-4"><div class="glass-card p-4 text-center"><div class="feature-icon mx-auto mb-3" style="background:var(--gradient1)"><i class="bi bi-person-fill text-white"></i></div><h5 class="fw-bold text-white">${u.firstName} ${u.lastName}</h5><span class="badge ${u.role==='admin'?'bg-danger':'bg-info'} mb-2">${u.role}</span><div class="text-muted small mt-2"><i class="bi bi-envelope me-1"></i>${u.email}</div><div class="text-muted small"><i class="bi bi-telephone me-1"></i>${u.phone}</div><div class="text-muted small"><i class="bi bi-calendar me-1"></i>${u.registered}</div></div></div><div class="col-md-8"><div class="row g-3 mb-3"><div class="col-4"><div class="glass-card p-3 text-center"><h5 class="text-gradient fw-bold mb-0">${bks.length}</h5><small class="text-muted">Bookings</small></div></div><div class="col-4"><div class="glass-card p-3 text-center"><h5 class="text-gradient fw-bold mb-0">₹${ts}</h5><small class="text-muted">Spent</small></div></div><div class="col-4"><div class="glass-card p-3 text-center"><h5 class="text-gradient fw-bold mb-0">${rvs.length}</h5><small class="text-muted">Reviews</small></div></div></div><h6 class="fw-bold text-white mb-2">History</h6><div class="table-responsive"><table class="table table-cinema table-sm"><thead><tr><th>ID</th><th>Movie</th><th>Date</th><th>Amount</th></tr></thead><tbody>${bks.map(b=>`<tr><td><span class="badge-cine small">${b.id}</span></td><td>${b.movieTitle}</td><td>${b.date}</td><td>₹${b.total}</td></tr>`).join('')||'<tr><td colspan="4" class="text-center text-muted">None</td></tr>'}</tbody></table></div></div></div>`;new bootstrap.Modal(document.getElementById('userDetailModal')).show()}
+function deleteUser(em){if(!confirm('Delete user?'))return;ls('users',(ls('users')||[]).filter(u=>u.email!==em));showToast('Deleted','User removed.','info');renderAdminUsers()}
+function renderAdminBookings(){document.getElementById('adminBookingsTable').innerHTML=(ls('bookings')||[]).map(b=>`<tr><td><span class="badge-cine">${b.id}</span></td><td>${b.userName}</td><td>${b.movieTitle}</td><td>${b.theater}</td><td>${b.date}</td><td>${b.seats.map(s=>s.id).join(', ')}</td><td class="fw-bold">₹${b.total}</td><td><span class="badge bg-success">${b.status}</span></td></tr>`).join('')||'<tr><td colspan="8" class="text-center text-muted py-4">No bookings</td></tr>'}
+function renderAdminReviews(){const ms=ls('movies')||[];document.getElementById('adminReviewsTable').innerHTML=(ls('reviews')||[]).map((r,i)=>{const m=ms.find(x=>x.id===r.movieId);return`<tr><td>${i+1}</td><td>${r.userName}</td><td>${m?.title||'N/A'}</td><td class="text-warning">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</td><td class="text-muted" style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${r.text}</td><td>${r.date}</td><td><button class="btn btn-sm" style="border:1px solid #dc3545;color:#dc3545" onclick="deleteReview(${r.id})"><i class="bi bi-trash"></i></button></td></tr>`}).join('')||'<tr><td colspan="7" class="text-center text-muted py-4">No reviews</td></tr>'}
+function deleteReview(id){if(!confirm('Delete?'))return;ls('reviews',(ls('reviews')||[]).filter(r=>r.id!==id));showToast('Deleted','Removed.','info');renderAdminReviews()}
+
+// INIT
+window.addEventListener('DOMContentLoaded',()=>{
+  initData();renderHomeMovies();
+  createParticles('heroParticles',25);createParticles('loginParticles',20);createParticles('registerParticles',20);
+  window.addEventListener('scroll',()=>{const n=document.getElementById('mainNavbar');if(n)n.classList.toggle('scrolled',window.scrollY>50)});
+  setTimeout(()=>document.getElementById('loader').classList.add('hidden'),1000);
+});
+</script>
+</body>
+</html>
